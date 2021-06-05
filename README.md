@@ -13,6 +13,29 @@
 [![amazon aws badge](https://img.shields.io/badge/Amazon_AWS-232F3E?style=flat&labelColor=232F3E&logo=amazon&logoColor=white)](https://aws.amazon.com/)
 [![intellij idea badge](https://img.shields.io/badge/Intellij_Idea-000000?style=flat&labelColor=000000&logo=intellij-idea&logoColor=white)](https://www.jetbrains.com/idea/)
  
+## Getting Started
+
+### Prerequisites
+- Java 11
+- Mysql
+- Apache Maven
+
+### Installation
+
+1- Expose the following environment variables:
+#### Linux
+```shell
+export DB_USERNAME=username \
+export DB_PASSWORD=password \
+export PET_STORE_APPLICATION_PORT=80
+```
+#### Windows
+```shell
+setx DB_USERNAME "username" ^
+setx DB_PASSWORD "password" ^
+setx PET_STORE_APPLICATION_PORT "80"
+```
+
 ## Contributors
 1. Ahmed El Sayed.
 2. Ebrahim Mohamed Ebrahim.
