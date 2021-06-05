@@ -1,0 +1,23 @@
+server:
+  port: '${pet-store-application-port}'
+  servlet:
+    context-path: '/api/v1'
+
+spring:
+  application:
+    name: 'pet-store'
+  datasource:
+    url: 'jdbc:mysql://localhost:3306'
+    username: '${db-username}'
+    password: '${db-password}'
+    hikari:
+      minimum-idle: 2
+      maximum-pool-size: 11
+      catalog: petstoreschema
+      register-mbeans: true
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: create
+#  flyway:
+#    schemas: petstoreschema
