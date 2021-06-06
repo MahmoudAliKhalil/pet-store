@@ -14,7 +14,7 @@
 [![intellij idea badge](https://img.shields.io/badge/Intellij_Idea-000000?style=flat&labelColor=000000&logo=intellij-idea&logoColor=white)](https://www.jetbrains.com/idea/)
  
 ## Getting Started
-
+![Pet-Store ](pet-store-team-members.png)
 ### Prerequisites
 - Java 11
 - Mysql
