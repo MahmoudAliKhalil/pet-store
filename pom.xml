@@ -16,6 +16,7 @@
     <properties>
         <java.version>11</java.version>
         <springfox-swagger.version>3.0.0</springfox-swagger.version>
+        <model.mapper.version>2.3.7</model.mapper.version>
     </properties>
     <dependencies>
         <dependency>
@@ -54,6 +55,12 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.modelmapper</groupId>
+            <artifactId>modelmapper</artifactId>
+            <version>${model.mapper.version}</version>
         </dependency>
     </dependencies>
 
