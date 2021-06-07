@@ -1,6 +1,8 @@
 package eg.gov.iti.jets.petstore.entities;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.DiscriminatorValue;
@@ -10,9 +12,9 @@ import java.util.Set;
 
 @Entity
 @DiscriminatorValue("SELLER")
-@Data
+@Getter
+@Setter
 public class Seller extends User {
     @OneToMany(mappedBy = "seller")
-    @ToString.Exclude
     private Set<Product> products;
 }

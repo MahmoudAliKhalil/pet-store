@@ -1,17 +1,18 @@
 package eg.gov.iti.jets.petstore.dto;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
-import lombok.*;
+import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@ApiModel(description = "Details about the Category")
+@Schema(description = "Details about the Category")
 public class CategoryDTO {
 
-    @ApiModelProperty(notes = "The unique id of the category")
+    @Schema(description = "The unique id of the category")
     private int id;
-    @ApiModelProperty(notes = "The category name")
+    @Schema(description = "The category name")
     private String name;
 }

@@ -2,6 +2,8 @@ package eg.gov.iti.jets.petstore.entities;
 
 import eg.gov.iti.jets.petstore.enums.OrderStatus;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
@@ -10,7 +12,8 @@ import java.util.Set;
 
 @Entity
 @Table(name = "ORDER_INFO")
-@Data
+@Getter
+@Setter
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,6 +26,5 @@ public class Order {
     @ManyToOne
     private User user;
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
-    @ToString.Exclude
     private Set<OrderItems> items;
 }

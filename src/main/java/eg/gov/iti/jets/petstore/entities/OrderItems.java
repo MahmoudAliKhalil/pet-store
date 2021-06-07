@@ -1,12 +1,15 @@
 package eg.gov.iti.jets.petstore.entities;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
 
 @Entity
-@Data
+@Getter
+@Setter
 public class OrderItems {
     @EmbeddedId
     private OrderItemsId id;
@@ -15,10 +18,8 @@ public class OrderItems {
     private Float priceAfterDiscount;
     @ManyToOne
     @MapsId("orderId")
-    @ToString.Exclude
     private Order order;
     @ManyToOne
     @MapsId("productId")
-    @ToString.Exclude
     private Product product;
 }

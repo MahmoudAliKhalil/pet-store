@@ -1,6 +1,8 @@
 package eg.gov.iti.jets.petstore.entities;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.CascadeType;
@@ -11,9 +13,9 @@ import java.util.Set;
 
 @Entity
 @DiscriminatorValue("SERVICE_PROVIDER")
-@Data
+@Getter
+@Setter
 public class ServiceProvider extends User {
     @OneToMany(mappedBy = "provider", cascade = CascadeType.ALL, orphanRemoval = true)
-    @ToString.Exclude
     private Set<Service> service;
 }

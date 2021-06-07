@@ -15,7 +15,7 @@
     <description>E-commerce application for pets.</description>
     <properties>
         <java.version>11</java.version>
-        <springfox-swagger.version>3.0.0</springfox-swagger.version>
+        <springdoc.version>1.5.9</springdoc.version>
         <model.mapper.version>2.3.7</model.mapper.version>
     </properties>
     <dependencies>
@@ -47,9 +47,9 @@
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-boot-starter</artifactId>
-            <version>${springfox-swagger.version}</version>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-ui</artifactId>
+            <version>${springdoc.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>

@@ -26,3 +26,9 @@ spring:
         dialect : org.hibernate.dialect.MySQL5Dialect
 #  flyway:
 #    schemas: petstoreschema
+
+springdoc:
+  swagger-ui:
+    path: api-docs
+  api-docs:
+    path: api-docs

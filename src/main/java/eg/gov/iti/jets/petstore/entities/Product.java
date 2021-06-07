@@ -1,13 +1,16 @@
 package eg.gov.iti.jets.petstore.entities;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.Set;
 
 @Entity
-@Data
+@Getter
+@Setter
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,29 +20,19 @@ public class Product {
     private Float price;
     private Integer quantity;
     @ManyToOne
-    @ToString.Exclude
     private Category category;
     @OneToMany(mappedBy = "product")
-    @ToString.Exclude
     private Set<ProductImage> images;
     @ManyToOne
-    @ToString.Exclude
     private User seller;
     private Boolean available = false;
     @ManyToOne
-    @ToString.Exclude
     private Brand brand;
-    @Enumerated(EnumType.ORDINAL)
-    @Column(columnDefinition = "tinyint")
-    private eg.gov.iti.jets.petstore.enums.Species specie;
     @ManyToOne
-    @JoinColumn(name = "specie", insertable = false, updatable = false)
     private Species species;
     private Float discount;
     @OneToMany(mappedBy = "product")
-    @ToString.Exclude
     private Set<Rate> rates;
     @OneToMany(mappedBy = "product")
-    @ToString.Exclude
     private Set<OrderItems> orderItems;
 }

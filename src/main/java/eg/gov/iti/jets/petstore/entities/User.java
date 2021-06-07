@@ -12,8 +12,7 @@ import java.time.LocalDate;
 @Data
 @Inheritance
 @DiscriminatorColumn(name = "USER_TYPE")
-@DiscriminatorValue("USER")
-public class User {
+public abstract class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
