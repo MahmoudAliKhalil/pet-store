@@ -1,6 +1,5 @@
 package eg.gov.iti.jets.petstore.entities;
 
-import eg.gov.iti.jets.petstore.enums.Species;
 import lombok.Data;
 import lombok.ToString;
 
@@ -32,10 +31,10 @@ public class Product {
     private Brand brand;
     @Enumerated(EnumType.ORDINAL)
     @Column(columnDefinition = "tinyint")
-    private Species specie;
+    private eg.gov.iti.jets.petstore.enums.Species specie;
     @ManyToOne
     @JoinColumn(name = "specie", insertable = false, updatable = false)
-    private Specie species;
+    private Species species;
     private Float discount;
     @OneToMany(mappedBy = "product")
     @ToString.Exclude

@@ -8,7 +8,7 @@ import javax.persistence.Id;
 
 @Entity
 @Data
-public class Specie {
+public class Species {
     @Id
     @Column(columnDefinition = "tinyint")
     private Integer id;

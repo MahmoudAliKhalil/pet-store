@@ -8,7 +8,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @ApiModel(description = "Details about the Category")
-public class CategoryDto {
+public class CategoryDTO {
 
     @ApiModelProperty(notes = "The unique id of the category")
     private int id;

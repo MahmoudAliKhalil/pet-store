@@ -1,6 +1,6 @@
 package eg.gov.iti.jets.petstore.resources;
 
-import eg.gov.iti.jets.petstore.dto.CategoryDto;
+import eg.gov.iti.jets.petstore.dto.CategoryDTO;
 import eg.gov.iti.jets.petstore.services.CategoryService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -25,21 +25,21 @@ public class CategoryResource {
     @GetMapping("/{categoryId}")
     @ApiOperation(value = "Finds Category by id",
     notes = "Provide and id to look up specific category")
-    public ResponseEntity<CategoryDto> getCategoryById(@ApiParam(value = "Id value for the category you need to retrieve ", required = true) @PathVariable Long categoryId){
-        CategoryDto category = categoryService.getCategoryById(categoryId);
+    public ResponseEntity<CategoryDTO> getCategoryById(@ApiParam(value = "Id value for the category you need to retrieve ", required = true) @PathVariable Long categoryId){
+        CategoryDTO category = categoryService.getCategoryById(categoryId);
         return ResponseEntity.status(HttpStatus.OK).body(category);
 
     }
 
     @GetMapping
-    public ResponseEntity<List<CategoryDto>> getAllCategories(){
-        List<CategoryDto> allCategory = categoryService.getAllCategory();
+    public ResponseEntity<List<CategoryDTO>> getAllCategories(){
+        List<CategoryDTO> allCategory = categoryService.getAllCategory();
         return ResponseEntity.status(HttpStatus.OK).body(allCategory);
     }
 
     @PostMapping
-    public ResponseEntity<CategoryDto> addNewCategory(@RequestBody CategoryDto categoryDto){
-        CategoryDto newCategory = categoryService.addNewCategory(categoryDto);
+    public ResponseEntity<CategoryDTO> addNewCategory(@RequestBody CategoryDTO categoryDto){
+        CategoryDTO newCategory = categoryService.addNewCategory(categoryDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(newCategory);
     }
 }

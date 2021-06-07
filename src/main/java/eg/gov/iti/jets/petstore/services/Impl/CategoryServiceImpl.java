@@ -1,6 +1,6 @@
 package eg.gov.iti.jets.petstore.services.Impl;
 
-import eg.gov.iti.jets.petstore.dto.CategoryDto;
+import eg.gov.iti.jets.petstore.dto.CategoryDTO;
 import eg.gov.iti.jets.petstore.entities.Category;
 import eg.gov.iti.jets.petstore.exceptions.CategoryException;
 import eg.gov.iti.jets.petstore.repositories.CategoryRepository;
@@ -26,33 +26,33 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public List<CategoryDto> getAllCategory() {
+    public List<CategoryDTO> getAllCategory() {
         List<Category> categoryList = categoryRepository.findAll();
-        List<CategoryDto> categoryDtoList = categoryList
+        List<CategoryDTO> categoryDTOList = categoryList
                 .stream()
-                .map(category -> modelMapper.map(category, CategoryDto.class))
+                .map(category -> modelMapper.map(category, CategoryDTO.class))
                 .collect(Collectors.toList());
 
-        return categoryDtoList;
+        return categoryDTOList;
     }
 
     @Override
-    public CategoryDto getCategoryById(Long id) throws CategoryException {
+    public CategoryDTO getCategoryById(Long id) throws CategoryException {
         Optional<Category> categoryOptional = categoryRepository.findById(id);
         if(categoryOptional.isPresent()){
             Category category = categoryOptional.get();
-            CategoryDto categoryDto = modelMapper.map(category, CategoryDto.class);
-           return categoryDto;
+            CategoryDTO categoryDTO = modelMapper.map(category, CategoryDTO.class);
+           return categoryDTO;
         }else{
             throw new CategoryException("Category with id " + id + " not found");
         }
     }
 
     @Override
-    public CategoryDto addNewCategory(CategoryDto categoryDto) {
-        Category category = modelMapper.map(categoryDto, Category.class);
+    public CategoryDTO addNewCategory(CategoryDTO categoryDTO) {
+        Category category = modelMapper.map(categoryDTO, Category.class);
         Category categoryAfterSaved = categoryRepository.save(category);
-        CategoryDto newCategoryDto = modelMapper.map(categoryAfterSaved, CategoryDto.class);
-        return newCategoryDto;
+        CategoryDTO newCategoryDTO = modelMapper.map(categoryAfterSaved, CategoryDTO.class);
+        return newCategoryDTO;
     }
 }
