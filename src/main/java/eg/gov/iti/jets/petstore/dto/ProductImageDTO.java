@@ -13,6 +13,8 @@ import lombok.Setter;
 @Schema(description = "Details about the Product Images")
 public class ProductImageDTO {
 
+    @Schema(description = "Product Image Id")
     private Long id;
+    @Schema(description = "Product Image Name")
     private String url;
 }

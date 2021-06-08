@@ -1,8 +1,5 @@
 package eg.gov.iti.jets.petstore.dto;
 
-import eg.gov.iti.jets.petstore.entities.Address;
-import eg.gov.iti.jets.petstore.entities.OrderItems;
-import eg.gov.iti.jets.petstore.entities.User;
 import eg.gov.iti.jets.petstore.enums.OrderStatus;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
@@ -10,7 +7,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -21,11 +17,15 @@ import java.util.Set;
 @NoArgsConstructor
 @Schema(description = "Details about the Order")
 public class OrderDTO {
-
+    @Schema(description = "id for order and it's unique for every order")
     private Long id;
+    @Schema(description = "Order Date")
     private LocalDateTime date = LocalDateTime.now();
-    private Address address;
+    @Schema(description = "The address to which the order will be shipped")
+    private AddressDTO address;
+    @Schema(description = "Status to represent Order Status", example = "NOT_COMPLETED")
     private OrderStatus status;
+    @Schema(description = "Order Items for any Order", example = "Cairo")
     private Set<OrderItemDTO> items = new HashSet<>();
 
 }
