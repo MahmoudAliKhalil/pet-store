@@ -49,10 +49,31 @@ public class SpeciesServiceImpl implements SpeciesService {
     }
 
     @Override
+    public SpeciesDTO getSpeciesById(Integer speciesId){
+        Optional<Species> speciesOptional = speciesRepository.findById(speciesId);
+        if (speciesOptional.isPresent()) {
+            Species species = speciesOptional.get();
+            SpeciesDTO speciesDTO = modelMapper.map(species, SpeciesDTO.class);
+            return speciesDTO;
+        } else {
+            throw new ResourceNotFoundException("Species no. " + speciesId + " is not found");
+        }
+    }
+
+    @Override
     public SpeciesDTO addNewSpecies(SpeciesDTO speciesDTO) {
         Species species = modelMapper.map(speciesDTO, Species.class);
         Species speciesAfterSaved = speciesRepository.save(species);
         return modelMapper.map(speciesAfterSaved, SpeciesDTO.class);
+    }
+
+    @Override
+    public SpeciesDTO updateSpecies(Integer id, SpeciesDTO speciesDTO) {
+        speciesDTO.setSpeciesId(id);
+        Species species = modelMapper.map(speciesDTO, Species.class);
+        Species speciesAfterUpdate = speciesRepository.save(species);
+        SpeciesDTO newSpeciesDTO = modelMapper.map(speciesAfterUpdate, SpeciesDTO.class);
+        return newSpeciesDTO;
     }
 
     @Override
@@ -62,6 +83,11 @@ public class SpeciesServiceImpl implements SpeciesService {
             throw new ResourceNotFoundException("Species " + speciesName + " is not found");
         }
         return true;
+    }
+
+    @Override
+    public void deleteSpecies(Integer speciesId) {
+        speciesRepository.deleteById(speciesId);
     }
 }
 
