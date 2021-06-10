@@ -11,8 +11,9 @@ import java.time.LocalDate;
 @Table(name = "USER_INFO")
 @Data
 @Inheritance
-@DiscriminatorColumn(name = "USER_TYPE")
-public abstract class User {
+@DiscriminatorColumn(name = "role")
+@DiscriminatorValue("ROLE_USER")
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -24,6 +25,7 @@ public abstract class User {
     private String phoneNumber;
     private Address address;
     @Enumerated(EnumType.STRING)
+    @Column(name = "role", insertable = false, updatable = false)
     private Roles role;
     private String userName;
     @Enumerated(EnumType.STRING)

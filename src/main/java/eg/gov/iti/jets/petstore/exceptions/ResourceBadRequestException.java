@@ -2,13 +2,13 @@ package eg.gov.iti.jets.petstore.exceptions;
 
 import org.springframework.http.HttpStatus;
 
-public class CustomerNotFoundException extends BaseException {
-    public CustomerNotFoundException(String message) {
+public class ResourceBadRequestException extends BaseException {
+    public ResourceBadRequestException(String message) {
         super(message);
     }
 
     @Override
     public HttpStatus getStatus() {
-        return HttpStatus.NOT_FOUND;
+        return HttpStatus.BAD_REQUEST;
     }
 }

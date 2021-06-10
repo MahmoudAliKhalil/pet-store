@@ -14,11 +14,11 @@ import lombok.Setter;
 @Schema(description = "Details about the Order Items")
 public class OrderItemDTO {
 
-    @Schema(description = "Order Items for any Order", example = "Cairo")
+    @Schema(description = "Order Items for any Order", example = "12")
     private OrderItemsId id;
-    @Schema(description = "quantity of item in system")
+    @Schema(description = "quantity of item in system", example = "50")
     private Integer quantity;
-    @Schema(description = "item price")
+    @Schema(description = "item price", example = "199.99")
     private Float priceAfterDiscount;
 
 }

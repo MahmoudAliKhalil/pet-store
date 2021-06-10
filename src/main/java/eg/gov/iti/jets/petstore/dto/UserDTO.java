@@ -12,7 +12,7 @@ import java.time.LocalDate;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public abstract class UserDTO {
+public class UserDTO {
     @Schema(description = "User's unique identifier", example = "1")
     private Long id;
     @Schema(description = "User's email address", example = "foo@example.com")

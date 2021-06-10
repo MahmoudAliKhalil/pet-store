@@ -1,8 +1,8 @@
-package eg.gov.iti.jets.petstore.services.Impl;
+package eg.gov.iti.jets.petstore.services.impl;
 
 import eg.gov.iti.jets.petstore.dto.AdminDTO;
 import eg.gov.iti.jets.petstore.entities.Admin;
-import eg.gov.iti.jets.petstore.exceptions.AdminNotFoundException;
+import eg.gov.iti.jets.petstore.exceptions.ResourceNotFoundException;
 import eg.gov.iti.jets.petstore.repositories.AdminRepository;
 import eg.gov.iti.jets.petstore.services.AdminService;
 import org.modelmapper.ModelMapper;
@@ -35,7 +35,7 @@ public class AdminServiceImpl implements AdminService {
     public AdminDTO getAdmin(Long id) {
         return sellerRepository.findById(id)
                 .map(e -> modelMapper.map(e, AdminDTO.class))
-                .orElseThrow(() -> new AdminNotFoundException("Admin with id: " + id + " not found."));
+                .orElseThrow(() -> new ResourceNotFoundException("Admin with id: " + id + " not found."));
     }
 
     @Override
@@ -54,7 +54,7 @@ public class AdminServiceImpl implements AdminService {
         try {
             sellerRepository.deleteById(id);
         } catch (EmptyResultDataAccessException exception) {
-            throw new AdminNotFoundException("Admin with id: " + id + " not found.");
+            throw new ResourceNotFoundException("Admin with id: " + id + " not found.");
         }
     }
 
