@@ -1,5 +1,6 @@
 package eg.gov.iti.jets.petstore.resources;
 
+import eg.gov.iti.jets.petstore.dto.ProductDTO;
 import eg.gov.iti.jets.petstore.dto.SellerDTO;
 import eg.gov.iti.jets.petstore.exceptions.models.ErrorDetails;
 import eg.gov.iti.jets.petstore.services.SellerService;
@@ -52,9 +53,10 @@ public class SellerResource {
     @ApiResponse(responseCode = "204", description = "Empty list of seller products.", content = @Content)
     @ApiResponse(responseCode = "404", description = "Seller account not found.", content = @Content(schema = @Schema(implementation = ErrorDetails.class)))
     @GetMapping("{id}/products")
-    @ResponseStatus(HttpStatus.OK)
-    public void getSellerProducts(@Parameter(description = "Seller account unique identifier.", example = "123", required = true) @PathVariable("id") Long id) {
-        throw new UnsupportedOperationException();
+    public ResponseEntity<List<ProductDTO>> getSellerProducts(@Parameter(description = "Seller account unique identifier.", example = "123", required = true) @PathVariable("id") Long id) {
+        List<ProductDTO> sellerProducts = sellerService.getSellerProducts(id);
+        HttpStatus httpStatus = sellerProducts.isEmpty() ? HttpStatus.NO_CONTENT : HttpStatus.OK;
+        return ResponseEntity.status(httpStatus).body(sellerProducts);
     }
 
     @Operation(summary = "Add new seller account.",

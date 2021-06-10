@@ -1,6 +1,7 @@
 package eg.gov.iti.jets.petstore.resources;
 
 import eg.gov.iti.jets.petstore.dto.CustomerDTO;
+import eg.gov.iti.jets.petstore.dto.OrderDTO;
 import eg.gov.iti.jets.petstore.exceptions.models.ErrorDetails;
 import eg.gov.iti.jets.petstore.services.CustomerService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -47,16 +48,17 @@ public class CustomerResource {
         return customerService.getCustomer(id);
     }
 
-//    @Operation(summary = "find specific customer products.",
-//            description = "Retrieve products related to specific Customer account.")
-//    @ApiResponse(responseCode = "200", description = "Successfully retrieve Customer products.")
-//    @ApiResponse(responseCode = "204", description = "Empty list of Customer products.", content = @Content)
-//    @ApiResponse(responseCode = "404", description = "Customer account not found.", content = @Content(schema = @Schema(implementation = ErrorDetails.class)))
-//    @GetMapping("{id}/products")
-//    @ResponseStatus(HttpStatus.OK)
-//    public void getCustomerOrder(@Parameter(description = "Customer account unique identifier.", example = "123", required = true) @PathVariable("id") Long id) {
-//        throw new UnsupportedOperationException();
-//    }
+    @Operation(summary = "find specific customer orders.",
+            description = "Retrieve orders related to specific Customer account.")
+    @ApiResponse(responseCode = "200", description = "Successfully retrieve Customer orders.")
+    @ApiResponse(responseCode = "204", description = "Empty list of Customer orders.", content = @Content)
+    @ApiResponse(responseCode = "404", description = "Customer account not found.", content = @Content(schema = @Schema(implementation = ErrorDetails.class)))
+    @GetMapping("{id}/orders")
+    public ResponseEntity<List<OrderDTO>> getCustomerOrder(@Parameter(description = "Customer account unique identifier.", example = "123", required = true) @PathVariable("id") Long id) {
+        List<OrderDTO> orders = customerService.getCustomerOrders(id);
+        HttpStatus status = orders.isEmpty()?HttpStatus.NO_CONTENT:HttpStatus.OK;
+        return ResponseEntity.status(status).body(orders);
+    }
 
     @Operation(summary = "Add new customer account.",
             description = "Insert new account with customer privilege.")

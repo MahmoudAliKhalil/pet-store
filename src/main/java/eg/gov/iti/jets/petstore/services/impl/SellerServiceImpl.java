@@ -1,5 +1,6 @@
 package eg.gov.iti.jets.petstore.services.impl;
 
+import eg.gov.iti.jets.petstore.dto.ProductDTO;
 import eg.gov.iti.jets.petstore.dto.SellerDTO;
 import eg.gov.iti.jets.petstore.entities.Seller;
 import eg.gov.iti.jets.petstore.exceptions.ResourceNotFoundException;
@@ -45,6 +46,7 @@ public class SellerServiceImpl implements SellerService {
 
     @Override
     public SellerDTO updateSeller(Long id, SellerDTO seller) {
+        sellerRepository.findById(id).orElseThrow(()->new ResourceNotFoundException("Seller with id: " + id + " not found."));
         seller.setId(id);
         return modelMapper.map(sellerRepository.save(modelMapper.map(seller, Seller.class)), SellerDTO.class);
     }
@@ -61,5 +63,15 @@ public class SellerServiceImpl implements SellerService {
     @Override
     public void deleteAllSellers() {
         sellerRepository.deleteAllInBatch();
+    }
+
+    @Override
+    public List<ProductDTO> getSellerProducts(Long id) {
+        return sellerRepository.findById(id)
+                .orElseThrow(()->new ResourceNotFoundException("Seller with id: " + id + " not found."))
+                .getProducts()
+                .stream()
+                .map(e->modelMapper.map(e,ProductDTO.class))
+                .collect(Collectors.toList());
     }
 }
