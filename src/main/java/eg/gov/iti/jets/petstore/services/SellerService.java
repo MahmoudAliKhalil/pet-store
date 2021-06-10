@@ -1,5 +1,6 @@
 package eg.gov.iti.jets.petstore.services;
 
+import eg.gov.iti.jets.petstore.dto.ProductDTO;
 import eg.gov.iti.jets.petstore.dto.SellerDTO;
 
 import java.util.List;
@@ -16,4 +17,6 @@ public interface SellerService {
     void deleteSeller(Long id);
 
     void deleteAllSellers();
+
+    List<ProductDTO> getSellerProducts(Long id);
 }
