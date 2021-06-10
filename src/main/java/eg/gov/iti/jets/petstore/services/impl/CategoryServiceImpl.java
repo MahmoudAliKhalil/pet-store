@@ -2,7 +2,7 @@ package eg.gov.iti.jets.petstore.services.impl;
 
 import eg.gov.iti.jets.petstore.dto.CategoryDTO;
 import eg.gov.iti.jets.petstore.entities.Category;
-import eg.gov.iti.jets.petstore.exceptions.CategoryException;
+import eg.gov.iti.jets.petstore.exceptions.ResourceNotFoundException;
 import eg.gov.iti.jets.petstore.repositories.CategoryRepository;
 import eg.gov.iti.jets.petstore.services.CategoryService;
 import org.modelmapper.ModelMapper;
@@ -35,13 +35,13 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public CategoryDTO getCategoryById(Long id) throws CategoryException {
+    public CategoryDTO getCategoryById(Long id) {
         Optional<Category> categoryOptional = categoryRepository.findById(id);
-        if(categoryOptional.isPresent()){
+        if (categoryOptional.isPresent()) {
             Category category = categoryOptional.get();
             return modelMapper.map(category, CategoryDTO.class);
-        }else{
-            throw new CategoryException("Category with id " + id + " not found");
+        } else {
+            throw new ResourceNotFoundException("Category with id: " + id + " not found");
         }
     }
 

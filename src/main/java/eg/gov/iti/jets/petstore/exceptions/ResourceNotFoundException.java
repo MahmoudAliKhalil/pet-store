@@ -2,9 +2,8 @@ package eg.gov.iti.jets.petstore.exceptions;
 
 import org.springframework.http.HttpStatus;
 
-
-public class SpeciesException extends BaseException {
-    public SpeciesException(String message) {
+public class ResourceNotFoundException extends BaseException {
+    public ResourceNotFoundException(String message) {
         super(message);
     }
 
@@ -13,4 +12,3 @@ public class SpeciesException extends BaseException {
         return HttpStatus.NOT_FOUND;
     }
 }
-

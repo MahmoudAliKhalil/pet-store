@@ -3,7 +3,7 @@ package eg.gov.iti.jets.petstore.services.impl;
 
 import eg.gov.iti.jets.petstore.dto.CustomerDTO;
 import eg.gov.iti.jets.petstore.entities.Customer;
-import eg.gov.iti.jets.petstore.exceptions.CustomerNotFoundException;
+import eg.gov.iti.jets.petstore.exceptions.ResourceNotFoundException;
 import eg.gov.iti.jets.petstore.repositories.CustomerRepository;
 import eg.gov.iti.jets.petstore.services.CustomerService;
 import org.modelmapper.ModelMapper;
@@ -24,6 +24,7 @@ public class CustomerServiceImpl implements CustomerService {
         this.customerRepository = customerRepository;
         this.modelMapper = modelMapper;
     }
+
     @Override
     public List<CustomerDTO> getAllCustomers(Integer page, Integer pageLimit) {
         return customerRepository.findAll(Pageable.ofSize(pageLimit).withPage(page))
@@ -37,7 +38,7 @@ public class CustomerServiceImpl implements CustomerService {
     public CustomerDTO getCustomer(Long id) {
         return customerRepository.findById(id)
                 .map(e -> modelMapper.map(e, CustomerDTO.class))
-                .orElseThrow(() -> new CustomerNotFoundException("Customer with id: " + id + " not found."));
+                .orElseThrow(() -> new ResourceNotFoundException("Customer with id: " + id + " not found."));
     }
 
     @Override
@@ -56,7 +57,7 @@ public class CustomerServiceImpl implements CustomerService {
         try {
             customerRepository.deleteById(id);
         } catch (EmptyResultDataAccessException exception) {
-            throw new CustomerNotFoundException("Customer with id: " + id + " not found.");
+            throw new ResourceNotFoundException("Customer with id: " + id + " not found.");
         }
     }
 

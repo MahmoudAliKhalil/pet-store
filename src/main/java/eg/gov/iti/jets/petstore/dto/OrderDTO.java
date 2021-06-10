@@ -25,7 +25,7 @@ public class OrderDTO {
     private AddressDTO address;
     @Schema(description = "Status to represent Order Status", example = "NOT_COMPLETED")
     private OrderStatus status;
-    @Schema(description = "Order Items for any Order", example = "Cairo")
+    @Schema(description = "Order Items for any Order")
     private Set<OrderItemDTO> items = new HashSet<>();
 
 }

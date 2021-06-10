@@ -2,7 +2,7 @@ package eg.gov.iti.jets.petstore.services.impl;
 
 import eg.gov.iti.jets.petstore.dto.SellerDTO;
 import eg.gov.iti.jets.petstore.entities.Seller;
-import eg.gov.iti.jets.petstore.exceptions.SellerNotFoundException;
+import eg.gov.iti.jets.petstore.exceptions.ResourceNotFoundException;
 import eg.gov.iti.jets.petstore.repositories.SellerRepository;
 import eg.gov.iti.jets.petstore.services.SellerService;
 import org.modelmapper.ModelMapper;
@@ -35,7 +35,7 @@ public class SellerServiceImpl implements SellerService {
     public SellerDTO getSeller(Long id) {
         return sellerRepository.findById(id)
                 .map(e -> modelMapper.map(e, SellerDTO.class))
-                .orElseThrow(() -> new SellerNotFoundException("Seller with id: " + id + " not found."));
+                .orElseThrow(() -> new ResourceNotFoundException("Seller with id: " + id + " not found."));
     }
 
     @Override
@@ -54,7 +54,7 @@ public class SellerServiceImpl implements SellerService {
         try {
             sellerRepository.deleteById(id);
         } catch (EmptyResultDataAccessException exception) {
-            throw new SellerNotFoundException("Seller with id: " + id + " not found.");
+            throw new ResourceNotFoundException("Seller with id: " + id + " not found.");
         }
     }
 
