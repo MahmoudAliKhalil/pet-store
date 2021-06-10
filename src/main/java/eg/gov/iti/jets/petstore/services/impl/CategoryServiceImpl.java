@@ -1,4 +1,4 @@
-package eg.gov.iti.jets.petstore.services.Impl;
+package eg.gov.iti.jets.petstore.services.impl;
 
 import eg.gov.iti.jets.petstore.dto.CategoryDTO;
 import eg.gov.iti.jets.petstore.entities.Category;
@@ -28,12 +28,10 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public List<CategoryDTO> getAllCategory() {
         List<Category> categoryList = categoryRepository.findAll();
-        List<CategoryDTO> categoryDTOList = categoryList
+        return categoryList
                 .stream()
                 .map(category -> modelMapper.map(category, CategoryDTO.class))
                 .collect(Collectors.toList());
-
-        return categoryDTOList;
     }
 
     @Override
@@ -41,8 +39,7 @@ public class CategoryServiceImpl implements CategoryService {
         Optional<Category> categoryOptional = categoryRepository.findById(id);
         if(categoryOptional.isPresent()){
             Category category = categoryOptional.get();
-            CategoryDTO categoryDTO = modelMapper.map(category, CategoryDTO.class);
-           return categoryDTO;
+            return modelMapper.map(category, CategoryDTO.class);
         }else{
             throw new CategoryException("Category with id " + id + " not found");
         }
@@ -52,7 +49,6 @@ public class CategoryServiceImpl implements CategoryService {
     public CategoryDTO addNewCategory(CategoryDTO categoryDTO) {
         Category category = modelMapper.map(categoryDTO, Category.class);
         Category categoryAfterSaved = categoryRepository.save(category);
-        CategoryDTO newCategoryDTO = modelMapper.map(categoryAfterSaved, CategoryDTO.class);
-        return newCategoryDTO;
+        return modelMapper.map(categoryAfterSaved, CategoryDTO.class);
     }
 }
