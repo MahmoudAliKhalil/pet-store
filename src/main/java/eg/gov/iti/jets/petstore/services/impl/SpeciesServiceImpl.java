@@ -1,4 +1,4 @@
-package eg.gov.iti.jets.petstore.services.impl;
+package eg.gov.iti.jets.petstore.services.Impl;
 
 
 import eg.gov.iti.jets.petstore.dto.SpeciesDTO;
@@ -30,10 +30,12 @@ public class SpeciesServiceImpl implements SpeciesService {
     @Override
     public List<SpeciesDTO> getAllSpecies() {
         List<Species> speciesList = speciesRepository.findAll();
-        return speciesList
+        List<SpeciesDTO> speciesDTOList = speciesList
                 .stream()
                 .map(species -> modelMapper.map(species, SpeciesDTO.class))
                 .collect(Collectors.toList());
+
+        return speciesDTOList;
     }
 
     @Override
@@ -41,7 +43,8 @@ public class SpeciesServiceImpl implements SpeciesService {
         Optional<Species> speciesOptional = speciesRepository.findSpeciesByName(speciesName);
         if (speciesOptional.isPresent()) {
             Species species = speciesOptional.get();
-            return modelMapper.map(species, SpeciesDTO.class);
+            SpeciesDTO speciesDTO = modelMapper.map(species, SpeciesDTO.class);
+            return speciesDTO;
         } else {
             throw new SpeciesException("Species " + speciesName + " is not found");
         }
@@ -52,7 +55,8 @@ public class SpeciesServiceImpl implements SpeciesService {
     public SpeciesDTO addNewSpecies(SpeciesDTO speciesDTO) {
         Species species = modelMapper.map(speciesDTO, Species.class);
         Species speciesAfterSaved = speciesRepository.save(species);
-        return modelMapper.map(speciesAfterSaved, SpeciesDTO.class);
+        SpeciesDTO newSpeciesDTO = modelMapper.map(speciesAfterSaved, SpeciesDTO.class);
+        return newSpeciesDTO;
     }
 
     @Override

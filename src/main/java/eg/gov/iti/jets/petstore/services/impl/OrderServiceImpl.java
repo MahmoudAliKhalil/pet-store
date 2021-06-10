@@ -1,4 +1,4 @@
-package eg.gov.iti.jets.petstore.services.impl;
+package eg.gov.iti.jets.petstore.services.Impl;
 
 import eg.gov.iti.jets.petstore.dto.OrderDTO;
 import eg.gov.iti.jets.petstore.entities.Order;
@@ -22,15 +22,17 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public List<OrderDTO> getAllOrder() {
         List<Order> orderList = orderRepository.findAll();
-        return orderList
+        List<OrderDTO> orderDTOList = orderList
                 .stream()
                 .map(order -> modelMapper.map(order, OrderDTO.class))
                 .collect(Collectors.toList());
+        return orderDTOList;
     }
 
     @Override
     public OrderDTO getOrderForSpecificUser(Long userId) {
         Order orderByUserIdAndOrderStatus = orderRepository.getOrderByUserIdAndOrderStatus(userId);
-        return modelMapper.map(orderByUserIdAndOrderStatus, OrderDTO.class);
+        OrderDTO orderDTO = modelMapper.map(orderByUserIdAndOrderStatus, OrderDTO.class);
+        return orderDTO;
     }
 }
