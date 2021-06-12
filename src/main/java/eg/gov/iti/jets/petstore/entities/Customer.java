@@ -11,7 +11,7 @@ import javax.persistence.OneToMany;
 import java.util.Set;
 
 @Entity
-@DiscriminatorValue("CUSTOMER")
+@DiscriminatorValue("ROLE_CUSTOMER")
 @Getter
 @Setter
 public class Customer extends User {

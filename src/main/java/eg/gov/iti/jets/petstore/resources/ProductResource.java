@@ -1,5 +1,6 @@
 package eg.gov.iti.jets.petstore.resources;
 
+import eg.gov.iti.jets.petstore.dto.ProductDTO;
 import eg.gov.iti.jets.petstore.entities.Product;
 import eg.gov.iti.jets.petstore.services.ProductService;
 import org.springframework.http.MediaType;
@@ -18,7 +19,7 @@ public class ProductResource {
     }
 
     @GetMapping(value = "/products", produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<Product> getProducts() {
+    public List<ProductDTO> getProducts() {
         return new ArrayList<>(0);
     }
 }
