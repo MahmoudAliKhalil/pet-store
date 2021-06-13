@@ -12,6 +12,8 @@ import lombok.NoArgsConstructor;
 @Schema(description = "Details about species")
 public class SpeciesDTO {
 
-    @Schema(description = "The species name")
+    @Schema(description = "The species id", example = "2")
+    private Integer speciesId;
+    @Schema(description = "The species name", example = "Cat")
     private String speciesName;
 }

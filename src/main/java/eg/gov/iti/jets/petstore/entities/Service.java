@@ -24,8 +24,8 @@ public class Service {
     private LocalTime endTime;
     private Duration timePerService;
     private Boolean deliverable;
-    @ManyToOne(optional = false)
-    private User provider;
+    @OneToOne(optional = false)
+    private ServiceProvider provider;
     @ManyToOne(optional = false)
     private ServiceType type;
 }
