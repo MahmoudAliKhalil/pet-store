@@ -1,6 +1,8 @@
-package eg.gov.iti.jets.petstore.services.impl;
+package eg.gov.iti.jets.petstore.services.Impl;
 
 import eg.gov.iti.jets.petstore.dto.CategoryDTO;
+import eg.gov.iti.jets.petstore.dto.OrderDTO;
+import eg.gov.iti.jets.petstore.dto.ProductDTO;
 import eg.gov.iti.jets.petstore.entities.Category;
 import eg.gov.iti.jets.petstore.exceptions.ResourceNotFoundException;
 import eg.gov.iti.jets.petstore.repositories.CategoryRepository;
@@ -51,4 +53,13 @@ public class CategoryServiceImpl implements CategoryService {
         Category categoryAfterSaved = categoryRepository.save(category);
         return modelMapper.map(categoryAfterSaved, CategoryDTO.class);
     }
+
+    @Override
+    public List<ProductDTO> getCategoryProducts(Long id) {
+        return categoryRepository.findById(id)
+                .orElseThrow(()->new ResourceNotFoundException("Customer with id: " + id + " not found."))
+                .getProducts()
+                .stream()
+                .map(e->modelMapper.map(e, ProductDTO.class))
+                .collect(Collectors.toList());    }
 }
