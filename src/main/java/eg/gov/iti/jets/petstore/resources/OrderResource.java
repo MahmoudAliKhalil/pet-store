@@ -43,19 +43,19 @@ public class OrderResource {
     }
 
 
-    @Operation(summary = "Finds Order by User id with order status not completed",
-            description = "Provide a user id to look up order with status not completed",
-            responses = {
-                    @ApiResponse(responseCode = "200", description = "Successfully retrieve user order."),
-                    @ApiResponse(responseCode = "400", description = "Bad request", content = @Content),
-                    @ApiResponse(responseCode = "204", description = "No order found", content = @Content)})
-
-    @GetMapping(path = "{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<OrderDTO> getOrderWithStatusNotCompletedForUser(@io.swagger.v3.oas.annotations.parameters.RequestBody(description = "User Id to get his order", required = true)@PathVariable Long userId){
-        OrderDTO orderForSpecificUser = orderService.getOrderForSpecificUser(userId);
-        Link link = linkTo(OrderResource.class).slash(userId).withSelfRel();
-        orderForSpecificUser.add(link);
-        return ResponseEntity.status(HttpStatus.OK).body(orderForSpecificUser);
-    }
+//    @Operation(summary = "Finds Order by User id with order status not completed",
+//            description = "Provide a user id to look up order with status not completed",
+//            responses = {
+//                    @ApiResponse(responseCode = "200", description = "Successfully retrieve user order."),
+//                    @ApiResponse(responseCode = "400", description = "Bad request", content = @Content),
+//                    @ApiResponse(responseCode = "204", description = "No order found", content = @Content)})
+//
+//    @GetMapping(path = "{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
+//    public ResponseEntity<OrderDTO> getOrderWithStatusNotCompletedForUser(@io.swagger.v3.oas.annotations.parameters.RequestBody(description = "User Id to get his order", required = true)@PathVariable Long userId){
+//        OrderDTO orderForSpecificUser = orderService.getOrderForSpecificUser(userId);
+//        Link link = linkTo(OrderResource.class).slash(userId).withSelfRel();
+//        orderForSpecificUser.add(link);
+//        return ResponseEntity.status(HttpStatus.OK).body(orderForSpecificUser);
+//    }
 
 }

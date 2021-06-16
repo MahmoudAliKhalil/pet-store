@@ -32,12 +32,6 @@ public class ShoppingCartResource {
     public ResponseEntity<?> addToShoppingCart(@RequestBody Long productId,  @PathVariable  Long userId) {
 
 
-
-
-
-
-
-
     }
 
     @Operation(summary = "find all product.",
