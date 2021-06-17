@@ -14,6 +14,6 @@ public class Customer extends User {
     @OneToMany(mappedBy = "customer")
     private Set<Order> orders;
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "customer")
     private Set<CartItem> shoppingCart;
 }

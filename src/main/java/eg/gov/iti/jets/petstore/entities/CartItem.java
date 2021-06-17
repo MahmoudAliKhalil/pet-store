@@ -11,13 +11,12 @@ import java.util.Objects;
 @Entity
 @Setter
 @Getter
-
 public class CartItem {
     @EmbeddedId
-    private CartItemId cartItemId;
+    private CartItemId cartItemId = new CartItemId();
     private Integer quantity;
 
-    @OneToOne
+    @ManyToOne
     @MapsId("customerId")
     private Customer customer;
 
@@ -25,14 +24,6 @@ public class CartItem {
     @MapsId("productId")
     private Product product;
 
-    public void increaseQuantity() {
-        this.quantity++;
-    }
-
-    public void decreaseQuantity() {
-        if (this.quantity > 0)
-            this.quantity--;
-    }
 
     @Override
     public boolean equals(Object o) {

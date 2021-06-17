@@ -32,13 +32,13 @@ public class ProductDTO {
     private Set<ProductImageDTO> images = new HashSet<>();
     //    private Boolean available ;
     @Schema(description = "Product Brand")
-    private Brand brand;
+    private BrandDTO brand;
     @Schema(description = "Product species")
     private Species species;
     @Schema(description = "Product discount")
     private Float discount;
     @Schema(description = "Product Rates")
     private Set<Rate> rates = new HashSet<>();
-    @Schema(description = "Items in Order")
-    private Set<OrderItems> orderItems;
+//    @Schema(description = "Items in Order")
+//    private Set<OrderItems> orderItems;
 }
