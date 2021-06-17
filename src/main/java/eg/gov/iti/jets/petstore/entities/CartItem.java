@@ -25,14 +25,6 @@ public class CartItem {
     @MapsId("productId")
     private Product product;
 
-    public void increaseQuantity() {
-        this.quantity++;
-    }
-
-    public void decreaseQuantity() {
-        if (this.quantity > 0)
-            this.quantity--;
-    }
 
     @Override
     public boolean equals(Object o) {

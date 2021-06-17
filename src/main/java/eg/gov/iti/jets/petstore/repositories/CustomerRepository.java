@@ -9,7 +9,6 @@ import java.util.Set;
 
 public interface CustomerRepository extends JpaRepository<Customer, Long> {
 
-    //TODO Check if works
-    Set<CartItem> findShoppingCartById(Long id);
+
 
 }
