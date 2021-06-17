@@ -1,9 +1,14 @@
 package eg.gov.iti.jets.petstore.resources;
 
 import eg.gov.iti.jets.petstore.dto.ProductDTO;
+<<<<<<< HEAD
 
 import eg.gov.iti.jets.petstore.exceptions.models.ErrorDetails;
 
+=======
+import eg.gov.iti.jets.petstore.dto.OrderDTO;
+import eg.gov.iti.jets.petstore.exceptions.models.ErrorDetails;
+>>>>>>> 8de68738ec6bfa6f001ed20365b4178db6d6654c
 import eg.gov.iti.jets.petstore.services.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -14,7 +19,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 
 import java.util.List;
 

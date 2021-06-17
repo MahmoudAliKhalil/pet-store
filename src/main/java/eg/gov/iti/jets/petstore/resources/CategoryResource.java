@@ -1,6 +1,9 @@
 package eg.gov.iti.jets.petstore.resources;
 
 import eg.gov.iti.jets.petstore.dto.CategoryDTO;
+
+import eg.gov.iti.jets.petstore.dto.OrderDTO;
+
 import eg.gov.iti.jets.petstore.dto.ProductDTO;
 import eg.gov.iti.jets.petstore.exceptions.models.ErrorDetails;
 import eg.gov.iti.jets.petstore.services.CategoryService;
