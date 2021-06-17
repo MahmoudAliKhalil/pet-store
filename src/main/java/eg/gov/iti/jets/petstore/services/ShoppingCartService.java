@@ -12,6 +12,8 @@ public interface ShoppingCartService {
 
     Set<CartItem> increaseProductQuantityInShoppingCart(Long customerId, ProductDTO productDTO);
 
+    Set<CartItem> updateProductFromShoppingCart(Long customerId, ProductDTO productDTO, Integer quantity);
+
     Set<CartItem> decreaseProductQuantityInShoppingCart(Long customerId, ProductDTO productDTO);
 
     Set<CartItem> removeProductFromShoppingCart(Long customerId, ProductDTO productDTO);

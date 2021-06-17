@@ -25,7 +25,7 @@ public class ProductDTO {
     private String description;
     @Schema(description = "Product Price")
     private Float price;
-    //    private Integer quantity;
+        private Integer quantity;
     @Schema(description = "Product category")
     private CategoryDTO category;
     @Schema(description = "Product Images")
