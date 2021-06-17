@@ -1,7 +1,7 @@
 package eg.gov.iti.jets.petstore.resources;
 
 import eg.gov.iti.jets.petstore.dto.ProductDTO;
-import eg.gov.iti.jets.petstore.dto.OrderDTO;
+import eg.gov.iti.jets.petstore.dto.ProductsDTO;
 import eg.gov.iti.jets.petstore.exceptions.models.ErrorDetails;
 import eg.gov.iti.jets.petstore.services.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -13,9 +13,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @RestController
 @RequestMapping(path = "products", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -32,10 +29,10 @@ public class ProductResource {
     @ApiResponse(responseCode = "204", description = "Empty list of product", content = @Content)
     @ApiResponse(responseCode = "200", description = "Successfully retrieve all product.")
     @GetMapping
-    public ResponseEntity<List<ProductDTO>> getProducts(@Parameter(description = "Number of pages to retrieve.", example = "0") @RequestParam(name = "page", defaultValue = "0") Integer page,
-                                                          @Parameter(description = "Number of accounts in the page.", example = "10") @RequestParam(name = "pageLimit", defaultValue = "10") Integer pageLimit) {
-        List<ProductDTO> products = productService.getAllProducts(page, pageLimit);
-        HttpStatus httpStatus = products.isEmpty() ? HttpStatus.NO_CONTENT : HttpStatus.OK;
+    public ResponseEntity<ProductsDTO> getProducts(@Parameter(description = "Number of pages to retrieve.", example = "0") @RequestParam(name = "page", defaultValue = "0") Integer page,
+                                                   @Parameter(description = "Number of accounts in the page.", example = "10") @RequestParam(name = "pageLimit", defaultValue = "10") Integer pageLimit) {
+        ProductsDTO products = productService.getAllProducts(page, pageLimit);
+        HttpStatus httpStatus = products.getProducts().isEmpty() ? HttpStatus.NO_CONTENT : HttpStatus.OK;
         return ResponseEntity.status(httpStatus).body(products);
     }
 
@@ -76,7 +73,7 @@ public class ProductResource {
     @PutMapping("{id}")
     @ResponseStatus(HttpStatus.OK)
     public ProductDTO updateProduct(@Parameter(description = "product unique identifier.", example = "123", required = true) @PathVariable("id") Long id,
-                                      @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "product information.", required = true) @RequestBody ProductDTO product) {
+                                    @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "product information.", required = true) @RequestBody ProductDTO product) {
         return productService.updateProduct(id, product);
     }
 
@@ -88,5 +85,18 @@ public class ProductResource {
     @ResponseStatus(HttpStatus.OK)
     public void deleteProduct(@Parameter(description = "product unique identifier.", example = "123", required = true) @PathVariable("id") Long id) {
         productService.deleteProduct(id);
+    }
+
+    @Operation(summary = "find category's products.",
+            description = "Retrieve all products belonging to specific category.")
+    @ApiResponse(responseCode = "204", description = "Empty list of product", content = @Content)
+    @ApiResponse(responseCode = "200", description = "Successfully retrieve all product.")
+    @GetMapping(params = {"categoryId"})
+    public ResponseEntity<ProductsDTO> getCategoryProducts(@Parameter(description = "Category unique identifier.", example = "1") @RequestParam(name = "categoryId") Long categoryId,
+                                                           @Parameter(description = "Number of pages to retrieve.", example = "0") @RequestParam(name = "page", defaultValue = "0") Integer page,
+                                                           @Parameter(description = "Number of accounts in the page.", example = "10") @RequestParam(name = "pageLimit", defaultValue = "10") Integer pageLimit) {
+        ProductsDTO products = productService.getProductsByCategoryId(categoryId, page, pageLimit);
+        HttpStatus httpStatus = products.getProducts().isEmpty() ? HttpStatus.NO_CONTENT : HttpStatus.OK;
+        return ResponseEntity.status(httpStatus).body(products);
     }
 }

@@ -1,12 +1,10 @@
 package eg.gov.iti.jets.petstore.services;
 
 import eg.gov.iti.jets.petstore.dto.ProductDTO;
-import eg.gov.iti.jets.petstore.dto.OrderDTO;
-
-import java.util.List;
+import eg.gov.iti.jets.petstore.dto.ProductsDTO;
 
 public interface ProductService {
-    List<ProductDTO> getAllProducts(Integer page, Integer pageLimit);
+    ProductsDTO getAllProducts(Integer page, Integer pageLimit);
 
     ProductDTO getProduct(Long id);
 
@@ -17,5 +15,7 @@ public interface ProductService {
     void deleteProduct(Long id);
 
     void deleteAllProducts();
+
+    ProductsDTO getProductsByCategoryId(Long id, Integer page, Integer pageLimit);
 
 }
