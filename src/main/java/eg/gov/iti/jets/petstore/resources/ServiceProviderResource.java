@@ -54,7 +54,7 @@ public class ServiceProviderResource {
     @ApiResponse(responseCode = "404", description = "ServiceProvider account not found.", content = @Content(schema = @Schema(implementation = ErrorDetails.class)))
     @GetMapping("{id}/services")
     @ResponseStatus(HttpStatus.OK)
-    public ServiceDTO getServiceProviderProducts(@Parameter(description = "ServiceProvider account unique identifier.", example = "123", required = true) @PathVariable("id") Long id) {
+    public ServiceDTO getServiceProviderService(@Parameter(description = "ServiceProvider account unique identifier.", example = "123", required = true) @PathVariable("id") Long id) {
         return serviceProviderService.getProviderService(id);
     }
 

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
+
 @Service
 public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
@@ -28,9 +29,11 @@ public class OrderServiceImpl implements OrderService {
                 .collect(Collectors.toList());
     }
 
-    @Override
-    public OrderDTO getOrderForSpecificUser(Long userId) {
-        Order orderByUserIdAndOrderStatus = orderRepository.getOrderByUserIdAndOrderStatus(userId);
-        return modelMapper.map(orderByUserIdAndOrderStatus, OrderDTO.class);
-    }
+    //this method is used to get the not completed Order( Shopping cart )
+
+//    @Override
+//    public OrderDTO getOrderForSpecificUser(Long userId) {
+//        Order orderByUserIdAndOrderStatus = orderRepository.getOrderByUserIdAndOrderStatus(userId);
+//        return modelMapper.map(orderByUserIdAndOrderStatus, OrderDTO.class);
+//    }
 }

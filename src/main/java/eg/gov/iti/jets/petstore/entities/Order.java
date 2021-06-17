@@ -24,7 +24,7 @@ public class Order {
     @Enumerated(EnumType.STRING)
     private OrderStatus status;
     @ManyToOne
-    private User user;
+    private Customer customer;
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<OrderItems> items;
 }

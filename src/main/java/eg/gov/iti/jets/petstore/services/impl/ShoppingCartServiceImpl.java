@@ -1,79 +1,103 @@
 package eg.gov.iti.jets.petstore.services.impl;
 
-import eg.gov.iti.jets.petstore.dto.*;
-import eg.gov.iti.jets.petstore.entities.*;
-import eg.gov.iti.jets.petstore.enums.OrderStatus;
-import eg.gov.iti.jets.petstore.repositories.OrderRepository;
-import eg.gov.iti.jets.petstore.services.CustomerService;
+import eg.gov.iti.jets.petstore.dto.ProductDTO;
+import eg.gov.iti.jets.petstore.entities.CartItem;
+import eg.gov.iti.jets.petstore.entities.Customer;
+import eg.gov.iti.jets.petstore.entities.Product;
+import eg.gov.iti.jets.petstore.exceptions.ResourceNotFoundException;
+import eg.gov.iti.jets.petstore.repositories.CustomerRepository;
 import eg.gov.iti.jets.petstore.services.ShoppingCartService;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 @Service
 public class ShoppingCartServiceImpl implements ShoppingCartService {
-    private final OrderRepository orderRepository;
+
+    private final CustomerRepository customerRepository;
     private final ModelMapper modelMapper;
-    private final CustomerService customerService;
 
-    @Autowired
-    public ShoppingCartServiceImpl(OrderRepository orderRepository, ModelMapper modelMapper, CustomerService customerService) {
-        this.orderRepository = orderRepository;
+    public ShoppingCartServiceImpl(CustomerRepository customerRepository, ModelMapper modelMapper) {
+        this.customerRepository = customerRepository;
         this.modelMapper = modelMapper;
-        this.customerService = customerService;
     }
 
 
     @Override
-    public OrderDTO addNewProductToShoppingCart(Long customerId, ProductDTO productDTO) {
-
+    public Set<CartItem> increaseProductQuantityInShoppingCart(Long customerId, ProductDTO productDTO) {
+        //TODO we create the cart in regestering user
+        //TODO if user wants to add to cart without login, he redirects to login
         // TODO: get shopping cart for user by user Id
-        CustomerDTO customer = customerService.getCustomer(customerId);
-        // TODO: create order item and add ot to cart set
-        OrderItemsId orderItemsId = new OrderItemsId();
-        orderItemsId.setProductId(productDTO.getId());
-
-        Order customerShoppingCart = orderRepository.getOrderByUserIdAndOrderStatus(customerId);
-        if (customerShoppingCart != null) {
-            customerShoppingCart.getItems().forEach(orderItems -> {
-                if (orderItems.getProduct().getId() == productDTO.getId()) {
-                    OrderItems orderItem = createOrderItem(productDTO, customerShoppingCart);
-                    orderItem.setQuantity(orderItems.getQuantity() + 1);
-                }
-            });
-            return modelMapper.map(customerShoppingCart, OrderDTO.class);
-        } else {
-            Order newCustomerShoppingCart = new Order();
-            newCustomerShoppingCart.setStatus(OrderStatus.NOT_COMPLETED);
-            newCustomerShoppingCart.setDate(LocalDateTime.now());
-            newCustomerShoppingCart.setAddress(modelMapper.map(customerService.getCustomer(customerId).getAddress(), Address.class));
-            OrderItems orderItem = createOrderItem(productDTO, newCustomerShoppingCart);
-            orderItem.setQuantity(1);
-            Set<OrderItems> orderItems = new HashSet<>();
-            orderItems.add(orderItem);
-            newCustomerShoppingCart.setItems(orderItems);
-            orderRepository.save(newCustomerShoppingCart);
-            return modelMapper.map(newCustomerShoppingCart, OrderDTO.class);
+        Set<CartItem> shoppingCart = customerRepository.findShoppingCartById(customerId);
+        Optional<CartItem> optionalItem = shoppingCart.stream().filter(s -> s.getProduct().getId() == productDTO.getId()).findFirst();
+        if (optionalItem.isPresent())
+            optionalItem.get().increaseQuantity();
+        else {
+            CartItem cartItem = new CartItem();
+            cartItem.setQuantity(1);
+            cartItem.setProduct(modelMapper.map(productDTO, Product.class));
+            shoppingCart.add(cartItem);
         }
-
+        return shoppingCart;
     }
 
     @Override
-    public OrderDTO removeProductFromShoppingCart(Long customerId, Integer productId) {
-        return null;
+    public Set<CartItem> decreaseProductQuantityInShoppingCart(Long customerId, ProductDTO productDTO) {
+        Set<CartItem> shoppingCart = customerRepository.findShoppingCartById(customerId);
+        Optional<CartItem> optionalItem = shoppingCart.stream().filter(s -> s.getProduct().getId() == productDTO.getId()).findFirst();
+        if (optionalItem.isPresent())
+            optionalItem.get().decreaseQuantity();
+        else
+            throw new ResourceNotFoundException("Product isn't in your cart");
+
+
+
+        return shoppingCart;
+
+//        Set<CartItem> shoppingCart = customerRepository.findShoppingCartById(customerId);
+//        CartItem cartItem = new CartItem();
+//        cartItem.setProduct(modelMapper.map(productDTO, Product.class));
+//        if (shoppingCart.contains(cartItem))
+//            cartItem.decreaseQuantity();
+//        else
+//            cartItem.setQuantity(1);
+//        shoppingCart.add(cartItem);
+//        return shoppingCart;
+    }
+
+    @Override
+    public Set<CartItem> removeProductFromShoppingCart(Long customerId, ProductDTO productDTO) {
+        Set<CartItem> shoppingCart = customerRepository.findShoppingCartById(customerId);
+        Optional<CartItem> optionalItem = shoppingCart.stream().filter(s -> s.getProduct().getId() == productDTO.getId()).findFirst();
+        if (optionalItem.isPresent())
+            shoppingCart.remove(optionalItem.get());
+        else
+            throw new ResourceNotFoundException("Product isn't in your cart");
+        return shoppingCart;
+    }
+
+    public Set<CartItem> updateProductFromShoppingCart(Long customerId, ProductDTO productDTO,Integer quantity) {
+        Set<CartItem> shoppingCart = customerRepository.findShoppingCartById(customerId);
+        Optional<CartItem> optionalItem = shoppingCart
+                .stream()
+                .filter(s -> s.getProduct().getId() == productDTO.getId())
+                .findFirst();
+
+        if (optionalItem.isPresent()){
+            CartItem cartItem = optionalItem.get();
+            cartItem.setQuantity(productDTO.getQuantity());
+            shoppingCart.add(cartItem);
+            Customer customer = customerRepository.getById(customerId);
+            customer.setShoppingCart(shoppingCart);
+            customerRepository.save(customer);
+        }
+        else
+            throw new ResourceNotFoundException("Product isn't in your cart");
+        return shoppingCart;
     }
 
 
-    private OrderItems createOrderItem(ProductDTO productDTO, Order order) {
-        OrderItems orderItem = new OrderItems();
-        orderItem.setOrder(order);
-        Product product = modelMapper.map(productDTO, Product.class);
-        orderItem.setProduct(product);
-        orderItem.setPriceAfterDiscount(productDTO.getDiscount() * productDTO.getPrice());
-        return orderItem;
-    }
+
 }

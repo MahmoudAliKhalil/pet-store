@@ -8,6 +8,6 @@ public interface OrderService {
 
     List<OrderDTO> getAllOrder();
 
-    OrderDTO getOrderForSpecificUser(Long userId);
+//    OrderDTO getOrderForSpecificUser(Long userId);
 
 }
