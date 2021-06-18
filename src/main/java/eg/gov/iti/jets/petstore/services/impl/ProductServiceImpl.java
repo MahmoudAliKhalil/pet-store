@@ -28,7 +28,7 @@ public class ProductServiceImpl implements ProductService {
     public ProductsDTO getAllProducts(Integer page, Integer pageLimit) {
         Page<Product> products = productRepository.findAll(Pageable.ofSize(pageLimit).withPage(page));
         return ProductsDTO.builder()
-                .numberOfPages(products.getTotalPages())
+                .count(products.getTotalElements())
                 .products(products.stream()
                         .map(e -> modelMapper.map(e, ProductDTO.class))
                         .collect(Collectors.toList()))
@@ -71,7 +71,7 @@ public class ProductServiceImpl implements ProductService {
     public ProductsDTO getProductsByCategoryId(Long id, Integer page, Integer pageLimit) {
         Page<Product> products = productRepository.findProductsByCategory_Id(id, Pageable.ofSize(pageLimit).withPage(page));
         return ProductsDTO.builder()
-                .numberOfPages(products.getTotalPages())
+                .count(products.getTotalElements())
                 .products(
                         products.get()
                                 .map(e -> modelMapper.map(e, ProductDTO.class))

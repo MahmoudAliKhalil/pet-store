@@ -12,5 +12,5 @@ public class ProductsDTO {
     @Schema(description = "List of Products")
     private List<ProductDTO> products;
     @Schema(description = "Total number of pages for products", example = "15")
-    private Integer numberOfPages;
+    private Long count;
 }
