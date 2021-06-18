@@ -17,28 +17,28 @@ import java.util.Set;
 @Schema(description = "Details about the Product")
 public class ProductDTO {
 
-    @Schema(description = "Product Id")
+    @Schema(description = "Product Id", example = "1")
     private Long id;
-    @Schema(description = "Product Name")
+    @Schema(description = "Product Name", example = "CattyFood")
     private String name;
-    @Schema(description = "Product Description")
+    @Schema(description = "Product Description", example = "Health food for your pets")
     private String description;
-    @Schema(description = "Product Price")
+    @Schema(description = "Product Price", example = "19.99")
     private Float price;
-    //    private Integer quantity;
+    @Schema(description = "Product stock quantity", example = "26")
+    private Integer quantity;
     @Schema(description = "Product category")
     private CategoryDTO category;
     @Schema(description = "Product Images")
     private Set<ProductImageDTO> images = new HashSet<>();
-    //    private Boolean available ;
+    @Schema(description = "Product availability", example = "true")
+    private Boolean available ;
     @Schema(description = "Product Brand")
-    private Brand brand;
+    private BrandDTO brand;
     @Schema(description = "Product species")
-    private Species species;
+    private SpeciesDTO species;
     @Schema(description = "Product discount")
     private Float discount;
     @Schema(description = "Product Rates")
-    private Set<Rate> rates = new HashSet<>();
-    @Schema(description = "Items in Order")
-    private Set<OrderItems> orderItems;
+    private Set<RateDTO> rates = new HashSet<>();
 }

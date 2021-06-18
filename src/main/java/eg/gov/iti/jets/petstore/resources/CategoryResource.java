@@ -1,6 +1,7 @@
 package eg.gov.iti.jets.petstore.resources;
 
 import eg.gov.iti.jets.petstore.dto.CategoryDTO;
+
 import eg.gov.iti.jets.petstore.exceptions.models.ErrorDetails;
 import eg.gov.iti.jets.petstore.services.CategoryService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -20,7 +21,7 @@ import java.util.List;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 @RestController
-@RequestMapping("/categories")
+@RequestMapping(path = "/categories", produces = MediaType.APPLICATION_JSON_VALUE)
 public class CategoryResource {
 
     private final CategoryService categoryService;
@@ -74,5 +75,17 @@ public class CategoryResource {
         newCategory.add(link, categoriesLink);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(newCategory);
+    }
+
+    @Operation(summary = "find specific category products.",
+            description = "Retrieve products related to specific category.")
+    @ApiResponse(responseCode = "200", description = "Successfully retrieve Category products.")
+    @ApiResponse(responseCode = "204", description = "Empty list of Category products.", content = @Content)
+    @ApiResponse(responseCode = "404", description = "Category not found.", content = @Content(schema = @Schema(implementation = ErrorDetails.class)))
+    @GetMapping("{id}/products")
+    public ResponseEntity<List<ProductDTO>> getCategoryProducts(@Parameter(description = "Category unique identifier.", example = "123", required = true) @PathVariable("id") Long id) {
+        List<ProductDTO> products = categoryService.getCategoryProducts(id);
+        HttpStatus status = products.isEmpty() ? HttpStatus.NO_CONTENT : HttpStatus.OK;
+        return ResponseEntity.status(status).body(products);
     }
 }

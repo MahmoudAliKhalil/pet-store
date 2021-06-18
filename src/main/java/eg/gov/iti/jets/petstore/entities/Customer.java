@@ -1,9 +1,7 @@
 package eg.gov.iti.jets.petstore.entities;
 
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
