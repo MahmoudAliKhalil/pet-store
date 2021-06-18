@@ -50,17 +50,19 @@ public class OrderServiceImpl implements OrderService {
         Set<CartItem> shoppingCart = customer.getShoppingCart();
         orderDTO.getItems().forEach(orderItemDTO -> {
             Integer productQuantityFromDatabase = productRepository.getById(orderItemDTO.getId().getProductId()).getQuantity();
-            Integer newQuantity = productQuantityFromDatabase - orderItemDTO.getQuantity() ;
+            Integer newQuantity = productQuantityFromDatabase - orderItemDTO.getQuantity();
             productRepository.updateProductQuantity(newQuantity, orderItemDTO.getId().getProductId());
         });
         Order order = modelMapper.map(orderDTO, Order.class);
         shoppingCart.stream().forEach(cartItem -> {
             order.getItems().add(
-                    new OrderItems(cartItem.getQuantity(), cartItem.getProduct().getDiscount()* cartItem.getProduct().getPrice(),cartItem.getProduct(),order)
+                    new OrderItems(cartItem.getQuantity(), cartItem.getProduct().getDiscount() * cartItem.getProduct().getPrice(), cartItem.getProduct(), order)
             );
         });
         order.setCustomer(customer);
         Order orderAfterSaved = orderRepository.save(order);
+        customer.getShoppingCart().clear();
+        customerRepository.save(customer);
         return modelMapper.map(orderAfterSaved, OrderDTO.class);
     }
 
