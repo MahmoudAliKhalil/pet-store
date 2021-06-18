@@ -24,12 +24,12 @@ public class PetStoreApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        Customer customer = new Customer();
-        customer.setEmail("hema");
-        customer.setPassword("123");
-        customer.setShoppingCart(new HashSet<CartItem>());
-
-        repository.save(customer);
+//        Customer customer = new Customer();
+//        customer.setEmail("hema");
+//        customer.setPassword("123");
+//        customer.setShoppingCart(new HashSet<CartItem>());
+//
+//        repository.save(customer);
 
     }
 }

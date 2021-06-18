@@ -15,6 +15,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -76,9 +78,9 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         }
 
         shoppingCart.add(cartItem);
-//        shoppingCart.stream().forEach(s -> {
-//            s.setCustomer(customer);
-//        });
+        shoppingCart.stream().forEach(s -> {
+            s.setCustomer(customer);
+        });
         customer.setShoppingCart(shoppingCart);
 //        try {
 
@@ -119,5 +121,22 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         return shoppingCartDTO;
     }
 
+//    @Override
+//    public Map<Long, Boolean> proceedToCheckout(Long customerId, Set<CartItemDTO> cartItemDTOS) {
+//        Map<Long, Boolean> itemFromStock = new HashMap<>();
+//        checkProductInStock(cartItemDTOS, itemFromStock);
+////        updateProductQuantityAfterCheckout(cartItemDTOS, itemFromStock);
+//        return itemFromStock;
+//    }
+
+
+
+    private void checkProductInStock(Set<CartItemDTO> cartItemDTOS, Map<Long, Boolean> itemFromStock) {
+        cartItemDTOS.forEach(item -> {
+            Integer productQuantityFromDatabase = productRepository.getById(item.getProduct().getId()).getQuantity();
+            if (item.getQuantity() > productQuantityFromDatabase)
+                itemFromStock.put(item.getProduct().getId(), true);
+        });
+    }
 
 }

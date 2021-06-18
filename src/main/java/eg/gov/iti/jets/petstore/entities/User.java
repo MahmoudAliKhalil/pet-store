@@ -43,6 +43,7 @@ public class User {
     @Column(name = "IS_NOT_LOCKED")
     private boolean isNotLocked;
 
+
     public User(User user) {
         this.id = user.getId();
         this.password = user.getPassword();

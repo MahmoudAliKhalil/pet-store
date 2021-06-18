@@ -28,5 +28,7 @@ public class OrderDTO extends RepresentationModel<OrderDTO> {
     private OrderStatus status;
     @Schema(description = "Order Items for any Order")
     private Set<OrderItemDTO> items = new HashSet<>();
+    @Schema(description = "Customer notes")
+    private String customerNotes;
 
 }

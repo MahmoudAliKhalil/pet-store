@@ -16,4 +16,6 @@ public class Customer extends User {
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "customer")
     private Set<CartItem> shoppingCart;
+
+    private Double balance;
 }

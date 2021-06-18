@@ -1,8 +1,7 @@
 package eg.gov.iti.jets.petstore.dto;
 
-import eg.gov.iti.jets.petstore.entities.Product;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -15,4 +14,5 @@ public class CartItemDTO {
     private ProductDTO product;
     @Schema(description = "Quantity of product in shopping cart")
     private Integer quantity;
+
 }
