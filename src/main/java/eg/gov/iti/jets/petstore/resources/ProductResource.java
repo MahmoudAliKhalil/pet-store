@@ -1,9 +1,8 @@
 package eg.gov.iti.jets.petstore.resources;
 
 import eg.gov.iti.jets.petstore.dto.ProductDTO;
-
-import eg.gov.iti.jets.petstore.entities.Product;
-
+import eg.gov.iti.jets.petstore.dto.ProductsDTO;
+import eg.gov.iti.jets.petstore.exceptions.models.ErrorDetails;
 import eg.gov.iti.jets.petstore.services.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
