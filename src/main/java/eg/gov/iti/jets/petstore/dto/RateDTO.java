@@ -13,9 +13,8 @@ import lombok.Setter;
 @NoArgsConstructor
 @Schema(description = "Details about the Rate")
 public class RateDTO {
-
-    @Schema(description = "Rate Id")
-    private RateId id;
-    @Schema(description = "Rate Number")
+    @Schema(description = "customer username", example = "Alex")
+    private String userName;
+    @Schema(description = "The rating number between 0 to 5", example = "5")
     private Integer rateNumber;
 }
