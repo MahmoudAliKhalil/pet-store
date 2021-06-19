@@ -1,9 +1,6 @@
 package eg.gov.iti.jets.petstore.resources;
 
 import eg.gov.iti.jets.petstore.dto.CategoryDTO;
-
-import eg.gov.iti.jets.petstore.dto.OrderDTO;
-
 import eg.gov.iti.jets.petstore.dto.ProductDTO;
 import eg.gov.iti.jets.petstore.exceptions.models.ErrorDetails;
 import eg.gov.iti.jets.petstore.services.CategoryService;
@@ -23,8 +20,10 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+
 @RestController
-@RequestMapping("/categories")
+@RequestMapping(path = "/categories", produces = MediaType.APPLICATION_JSON_VALUE)
 public class CategoryResource {
 
     private final CategoryService categoryService;
@@ -88,7 +87,7 @@ public class CategoryResource {
     @GetMapping("{id}/products")
     public ResponseEntity<List<ProductDTO>> getCategoryProducts(@Parameter(description = "Category unique identifier.", example = "123", required = true) @PathVariable("id") Long id) {
         List<ProductDTO> products = categoryService.getCategoryProducts(id);
-        HttpStatus status = products.isEmpty()?HttpStatus.NO_CONTENT:HttpStatus.OK;
+        HttpStatus status = products.isEmpty() ? HttpStatus.NO_CONTENT : HttpStatus.OK;
         return ResponseEntity.status(status).body(products);
     }
 }

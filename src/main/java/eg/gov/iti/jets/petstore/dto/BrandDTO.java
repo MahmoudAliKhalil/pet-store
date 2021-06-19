@@ -10,8 +10,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Schema(description = "Brand details about the Product")
 public class BrandDTO {
-    @Schema(description = "Brand id")
+    @Schema(description = "Brand unique identifier", example = "1")
     private Integer id;
-    @Schema(description = "Brand name")
+    @Schema(description = "Brand name", example = "Persian")
     private String name;
 }
