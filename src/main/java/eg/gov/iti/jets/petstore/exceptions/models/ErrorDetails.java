@@ -19,4 +19,5 @@ public class ErrorDetails {
     @NonNull
     @Schema(description = "The message related to error with is more human readable.", example = "User not found with specified id: 123.")
     private String message;
+
 }

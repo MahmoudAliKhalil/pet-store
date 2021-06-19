@@ -47,15 +47,6 @@ public class ServiceResource {
         return serviceService.getService(id);
     }
 
-//    @Operation(summary = "find specific service Service.",
-//            description = "Retrieve Service related to specific service account.")
-//    @ApiResponse(responseCode = "200", description = "Successfully retrieve service Service.")
-//    @ApiResponse(responseCode = "404", description = "Service account not found.", content = @Content(schema = @Schema(implementation = ErrorDetails.class)))
-//    @GetMapping("{id}/")
-//    @ResponseStatus(HttpStatus.OK)
-//    public ServiceDTO getServiceProducts(@Parameter(description = "Service account unique identifier.", example = "123", required = true) @PathVariable("id") Long id) {
-//        return serviceService.getProviderService(id);
-//    }
 
     @Operation(summary = "Add new service .",
             description = "Insert new service.")

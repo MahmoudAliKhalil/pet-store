@@ -18,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
@@ -44,7 +45,7 @@ public class CategoryResource {
         Link link = linkTo(CategoryResource.class).slash(categoryId).withSelfRel();
         Link categoriesLink = linkTo(CategoryResource.class)
                 .withRel("allCategories");
-        category.add(link, categoriesLink);
+        category.add(link,categoriesLink);
         return ResponseEntity.status(HttpStatus.OK).body(category);
     }
 
@@ -67,12 +68,12 @@ public class CategoryResource {
     @ApiResponse(responseCode = "400", description = "Bad request, you must provide all the fields", content = @Content(schema = @Schema(implementation = ErrorDetails.class)))
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<CategoryDTO> addNewCategory(@io.swagger.v3.oas.annotations.parameters.RequestBody(description = "category information.", required = true)
-                                                      @RequestBody CategoryDTO categoryDto) {
+                                                          @RequestBody CategoryDTO categoryDto) {
         CategoryDTO newCategory = categoryService.addNewCategory(categoryDto);
 
         Link link = linkTo(CategoryResource.class).slash(newCategory.getId()).withSelfRel();
         Link categoriesLink = linkTo(CategoryResource.class)
-                .withRel("allCategories");
+                              .withRel("allCategories");
         newCategory.add(link, categoriesLink);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(newCategory);

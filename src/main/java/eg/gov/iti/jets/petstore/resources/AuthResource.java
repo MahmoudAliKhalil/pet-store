@@ -3,6 +3,7 @@ package eg.gov.iti.jets.petstore.resources;
 import eg.gov.iti.jets.petstore.dto.AuthenticationResponse;
 import eg.gov.iti.jets.petstore.dto.UserLoginDTO;
 import eg.gov.iti.jets.petstore.dto.UserRegistrationDTO;
+import eg.gov.iti.jets.petstore.entities.User;
 import eg.gov.iti.jets.petstore.security.JwtUtil;
 import eg.gov.iti.jets.petstore.services.AuthService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -56,16 +57,17 @@ public class AuthResource {
         }catch (BadCredentialsException exception){
             throw new Exception("Incorrect UserName or Password " + exception);
         }
-        final UserDetails userDetails = authService.loadUserByUsername(userLoginDTO.getEmail());
-        String token = jwtUtil.generateToken(userDetails);
-        return ResponseEntity.ok(new AuthenticationResponse(token));
+        final UserDetails userDetails =authService.loadUserByUsername(userLoginDTO.getEmail());
+        Long userId = ((User) userDetails).getId();
+        String token = jwtUtil.generateToken(userDetails, userId);
+        return ResponseEntity.ok(new AuthenticationResponse(token,userId));
     }
 
-    @PostMapping(value = "/refresh")
-    public ResponseEntity<AuthenticationResponse> refreshToken(Principal principal) {
-        UserDetails userDetails = authService.loadUserByUsername(principal.getName());
-        String token = jwtUtil.generateToken(userDetails);
-        return  ResponseEntity.ok(new AuthenticationResponse(token));
-    }
+//    @PostMapping(value = "/refresh")
+//    public ResponseEntity<AuthenticationResponse> refreshToken(Principal principal) {
+//        UserDetails userDetails = authService.loadUserByUsername(principal.getName());
+//        String token = jwtUtil.generateToken(userDetails);
+//        return  ResponseEntity.ok(new AuthenticationResponse(token));
+//    }
 
 }

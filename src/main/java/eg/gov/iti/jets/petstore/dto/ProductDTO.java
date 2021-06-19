@@ -16,7 +16,6 @@ import java.util.Set;
 @NoArgsConstructor
 @Schema(description = "Details about the Product")
 public class ProductDTO {
-
     @Schema(description = "Product Id", example = "1")
     private Long id;
     @Schema(description = "Product Name", example = "CattyFood")

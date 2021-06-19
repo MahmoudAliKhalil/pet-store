@@ -17,11 +17,13 @@ public class JwtUtil {
     private static final String CLAIMS_SUBJECT = "subject";
     private static final String CLAIMS_CREATED = "createdDate";
     private static final String ROLES = "role";
+    private static final String USER_ID = "id";
 
-    public String generateToken(UserDetails userDetails){
+    public String generateToken(UserDetails userDetails, Long userId){
         HashMap<String, Object> claims = new HashMap<>(0);
         claims.put(CLAIMS_SUBJECT, userDetails.getUsername());
         claims.put(CLAIMS_CREATED, new Date());
+        claims.put(USER_ID, userId);
         claims.put(ROLES,userDetails.getAuthorities());
         return createToken(claims, userDetails.getUsername());
     }
