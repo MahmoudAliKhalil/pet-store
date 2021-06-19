@@ -1,8 +1,9 @@
 package eg.gov.iti.jets.petstore.resources;
 
 import eg.gov.iti.jets.petstore.dto.ProductDTO;
-import eg.gov.iti.jets.petstore.dto.ProductsDTO;
-import eg.gov.iti.jets.petstore.exceptions.models.ErrorDetails;
+
+import eg.gov.iti.jets.petstore.entities.Product;
+
 import eg.gov.iti.jets.petstore.services.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -24,6 +25,7 @@ public class ProductResource {
     public ProductResource(ProductService productService) {
         this.productService = productService;
     }
+
 
     @Operation(summary = "find all product.",
             description = "Retrieve all product.")
@@ -118,6 +120,7 @@ public class ProductResource {
         ProductsDTO products = productService.getProductsByBrandId(brandId, minPrice, maxPrice, page, pageLimit);
         HttpStatus httpStatus = products.getProducts().isEmpty() ? HttpStatus.NO_CONTENT : HttpStatus.OK;
         return ResponseEntity.status(httpStatus).body(products);
+
     }
 
     @Operation(summary = "find products by category and brand.",

@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.hateoas.RepresentationModel;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -16,7 +17,7 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Schema(description = "Details about the Order")
-public class OrderDTO {
+public class OrderDTO extends RepresentationModel<OrderDTO> {
     @Schema(description = "id for order and it's unique for every order")
     private Long id;
     @Schema(description = "Order Date")
