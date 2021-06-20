@@ -6,9 +6,11 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "PRODUCT_IMAGE")
-@Data
+@Getter
+@Setter
 @Builder
 @NoArgsConstructor
+@AllArgsConstructor
 public class ProductImage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
