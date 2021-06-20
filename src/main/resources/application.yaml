@@ -23,7 +23,7 @@ spring:
 
     properties:
       hibernate:
-        dialect : org.hibernate.dialect.MySQL5Dialect
+        dialect: org.hibernate.dialect.MySQL8Dialect
 #  flyway:
 #    schemas: petstoreschema
 
@@ -32,3 +32,14 @@ springdoc:
     path: api-docs
   api-docs:
     path: api-docs
+
+cloud:
+  aws:
+    credentials:
+      access-key: AKIAXEW3M2J5FLR7EO4T
+      secret-key: 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
+    region:
+      static: us-east-2
+      auto: false
+    s3:
+      bucket-name: petstore-aws-storage

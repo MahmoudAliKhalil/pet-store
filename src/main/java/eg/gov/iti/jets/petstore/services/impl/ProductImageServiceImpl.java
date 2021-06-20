@@ -46,8 +46,7 @@ public class ProductImageServiceImpl implements ProductImageService {
         this.modelMapper = modelMapper;
         this.amazonS3 = amazonS3;
     }
-
-
+    
     // @Async annotation ensures that the method is executed in a different background thread
     // but not consume the main thread.
     @Async

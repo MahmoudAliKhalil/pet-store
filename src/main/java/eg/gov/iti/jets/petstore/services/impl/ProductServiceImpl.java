@@ -1,17 +1,31 @@
 package eg.gov.iti.jets.petstore.services.impl;
 
+import com.amazonaws.AmazonClientException;
+import com.amazonaws.AmazonServiceException;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import eg.gov.iti.jets.petstore.dto.ProductDTO;
 import eg.gov.iti.jets.petstore.dto.ProductsDTO;
 import eg.gov.iti.jets.petstore.entities.Product;
+import eg.gov.iti.jets.petstore.entities.ProductImage;
 import eg.gov.iti.jets.petstore.exceptions.ResourceNotFoundException;
 import eg.gov.iti.jets.petstore.repositories.ProductRepository;
 import eg.gov.iti.jets.petstore.services.ProductService;
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.util.Arrays;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -19,10 +33,17 @@ import java.util.stream.Stream;
 public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
     private final ModelMapper modelMapper;
+    private final AmazonS3 amazonS3;
 
-    public ProductServiceImpl(ProductRepository productRepository, ModelMapper modelMapper) {
+    @Value("${cloud.aws.s3.bucket-name}")
+    private String bucketName;
+
+    private Logger logger = LoggerFactory.getLogger(ProductServiceImpl.class);
+
+    public ProductServiceImpl(ProductRepository productRepository, ModelMapper modelMapper, AmazonS3 amazonS3) {
         this.productRepository = productRepository;
         this.modelMapper = modelMapper;
+        this.amazonS3 = amazonS3;
     }
 
     @Override
@@ -94,4 +115,60 @@ public class ProductServiceImpl implements ProductService {
                                 .collect(Collectors.toList())
                 ).build();
     }
+
+    @Async
+    @Override
+    public ProductDTO addProductWithImages(MultipartFile[] files, String productDTOJson) throws JsonProcessingException {
+        Product product = new ObjectMapper().readValue(productDTOJson, Product.class);
+
+
+        logger.info("productDTO before converting to object: ", productDTOJson);
+        logger.info("Product after converting from json: {}", product);
+        product.getImages().clear();
+        logger.info("Product before persist: {}", product);
+        Arrays.asList(files).stream().forEach(file ->
+                {
+                    System.out.println("File data: " + file.getOriginalFilename());
+                    try {
+                        ObjectMetadata metadata = new ObjectMetadata();
+                        metadata.setContentLength(file.getSize());
+                        final String keyName = product.getCategory().getName() + '/' +
+                                product.getName() + '/' +
+                                file.getOriginalFilename();
+                        amazonS3.putObject(bucketName, keyName, file.getInputStream(), metadata);
+                        logger.info("Url Object: {}", amazonS3.getUrl(bucketName, keyName));
+
+                        ProductImage image = ProductImage.builder()
+                                .name(file.getOriginalFilename())
+                                .url(amazonS3.getUrl(bucketName, keyName).toString())
+                                .product(product)
+                                .build();
+                        product.getImages().add(image);
+
+                    } catch (IOException ioe) {
+                        logger.error("IOException: {}", ioe.getMessage());
+                    } catch (AmazonServiceException ase) {
+                        logAmazonServiceException(ase);
+                    } catch (AmazonClientException ace) {
+                        logger.error("Caught an AmazonClientException: ", ace);
+                        logger.info("Error Message: {}", ace.getMessage());
+                    }
+                }
+        );
+        logger.info("Product to persist: {}", product);
+        return new ModelMapper().map(productRepository.save(product), ProductDTO.class);
+
+    }
+
+    private void logAmazonServiceException(AmazonServiceException ase) {
+        logger.error(" The call was transmitted successfully, but Amazon S3 couldn't process \n" +
+                "it, so it returned an error response., rejected reasons: ", ase);
+
+        logger.info("Error Message: {}", ase.getMessage());
+        logger.info("HTTP Status Code: {}", ase.getStatusCode());
+        logger.info("AWS Error Code: {}", ase.getErrorCode());
+        logger.info("Error Type: {}", ase.getErrorType());
+        logger.info("Request ID: {}", ase.getRequestId());
+    }
+
 }

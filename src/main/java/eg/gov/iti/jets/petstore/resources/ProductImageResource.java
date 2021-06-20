@@ -29,7 +29,7 @@ public class ProductImageResource {
     @DeleteMapping(value = "/delete")
     public ResponseEntity<String> deleteSingleImage(@PathParam(value = "imageName") final String imageName,
                                              @PathParam("productName") final String productName,
-                                             @PathParam("categoryName") final String categoryName) {
+                                             @PathParam("categoryName") final String categoryName){
 
         Boolean isSingleImageDeleted = productImageService.deleteSingleImage(imageName, productName, categoryName);
         final String imagePath = categoryName + '/' + productName + '/' + imageName;
