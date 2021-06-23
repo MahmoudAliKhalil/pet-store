@@ -32,4 +32,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     @Query("SELECT p from Product p where p.id <= :s order by(p.creationDate)")
     List<Product> getTheTopRatedProductsProducts(Long s);
 
+    @Query("select p from Product p inner join OrderItems o on o.product.id = p.id group by o.product.id order by count(o.product.id) desc, sum(o.quantity) desc")
+    Page<Product> getTheBestSellersProducts(Pageable pageable);
+
 }
