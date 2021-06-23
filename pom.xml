@@ -17,6 +17,7 @@
         <java.version>11</java.version>
         <springdoc.version>1.5.9</springdoc.version>
         <model.mapper.version>2.3.7</model.mapper.version>
+        <aws.sdk.version>1.12.6</aws.sdk.version>
     </properties>
     <dependencies>
         <dependency>
@@ -62,6 +63,14 @@
             <artifactId>modelmapper</artifactId>
             <version>${model.mapper.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.amazonaws</groupId>
+            <artifactId>aws-java-sdk</artifactId>
+            <version>${aws.sdk.version}</version>
+        </dependency>
+
+
 
         <dependency>
             <groupId>org.springframework.boot</groupId>

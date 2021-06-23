@@ -1,5 +1,6 @@
 package eg.gov.iti.jets.petstore.resources;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import eg.gov.iti.jets.petstore.dto.ProductDTO;
 import eg.gov.iti.jets.petstore.dto.ProductsDTO;
 import eg.gov.iti.jets.petstore.exceptions.models.ErrorDetails;
@@ -13,6 +14,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.Arrays;
 
 import java.util.List;
 
@@ -138,6 +142,20 @@ public class ProductResource {
         ProductsDTO products = productService.getProductsByCategoryAndBrand(categoryId, brandId, minPrice, maxPrice, page, pageLimit);
         HttpStatus httpStatus = products.getProducts().isEmpty() ? HttpStatus.NO_CONTENT : HttpStatus.OK;
         return ResponseEntity.status(httpStatus).body(products);
+    }
+
+    @PostMapping(value = "/images", consumes = { "multipart/form-data" })
+    ResponseEntity<?> writeMultiple(@RequestParam("files") MultipartFile[] files
+            , @RequestParam("product") String productDTOJson) throws JsonProcessingException {
+
+        ProductDTO returnedProductDTO = productService.addProductWithImages(files, productDTOJson);
+        System.out.println("Returned ProductDTO: "+ returnedProductDTO);
+        Arrays.asList(files).stream().forEach(file ->
+                {
+                    System.out.println("File data: " + file.getOriginalFilename());
+                }
+        );
+        return ResponseEntity.ok().body(returnedProductDTO);
     }
 
     @Operation(summary = "find Special Offers product.",
