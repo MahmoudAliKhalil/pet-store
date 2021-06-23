@@ -15,6 +15,10 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Schema(description = "Details about User Registration Data")
 public class UserRegistrationDTO {
+    @Schema(description = "User first Name", example = "foo")
+    private String firstName;
+    @Schema(description = "User last Name", example = "foo")
+    private String lastName;
     @Schema(description = "User's email address", example = "foo@example.com")
     private String email;
     @Schema(description = "User's account hashed password", example = "!@ABc12345_#0")

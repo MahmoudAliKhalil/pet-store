@@ -26,4 +26,10 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     Page<Product> findProductsByCategory_IdAndBrand_IdAndPriceBetween(Long categoryId, Integer brandId, Float minPrice, Float maxPrice, Pageable pageable);
 
+    @Query("SELECT p from Product p where p.id <= :s order by(p.discount)")
+    List<Product> getTheBestOfferForProducts(Long s);
+
+    @Query("SELECT p from Product p where p.id <= :s order by(p.creationDate)")
+    List<Product> getTheTopRatedProductsProducts(Long s);
+
 }

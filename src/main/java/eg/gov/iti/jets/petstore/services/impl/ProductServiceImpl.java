@@ -26,6 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -105,6 +106,18 @@ public class ProductServiceImpl implements ProductService {
     public ProductsDTO getProductsByCategoryAndBrand(Long categoryId, Integer brandId, Float minPrice, Float maxPrice, Integer page, Integer pageLimit) {
         Page<Product> products = productRepository.findProductsByCategory_IdAndBrand_IdAndPriceBetween(categoryId, brandId, minPrice, maxPrice, Pageable.ofSize(pageLimit).withPage(page));
         return buildProductsDTO(products.getTotalElements(), products.get());
+    }
+
+    @Override
+    public List<ProductDTO> getTheBestOfferForProducts(Long size) {
+        return productRepository.getTheBestOfferForProducts(size).stream().map(p->
+            modelMapper.map(p, ProductDTO.class)).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ProductDTO> getTopRatedProducts(Long size) {
+        return productRepository.getTheTopRatedProductsProducts(size).stream().map(p->
+                modelMapper.map(p, ProductDTO.class)).collect(Collectors.toList());
     }
 
     private ProductsDTO buildProductsDTO(Long count, Stream<Product> products) {

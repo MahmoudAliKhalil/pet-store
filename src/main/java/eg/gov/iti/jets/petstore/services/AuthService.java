@@ -5,6 +5,6 @@ import eg.gov.iti.jets.petstore.dto.UserRegistrationDTO;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 public interface AuthService extends UserDetailsService {
-    void signUp(UserRegistrationDTO userRegistrationDTO);
+    UserRegistrationDTO signUp(UserRegistrationDTO userRegistrationDTO);
     String signIn(UserLoginDTO userLoginDTO);
 }

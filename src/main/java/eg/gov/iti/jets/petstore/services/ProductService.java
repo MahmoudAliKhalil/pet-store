@@ -5,6 +5,8 @@ import eg.gov.iti.jets.petstore.dto.ProductDTO;
 import eg.gov.iti.jets.petstore.dto.ProductsDTO;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 public interface ProductService {
     ProductsDTO getAllProducts(Float minPrice, Float maxPrice, Integer page, Integer pageLimit);
 
@@ -23,8 +25,6 @@ public interface ProductService {
     ProductsDTO getProductsByBrandId(Integer id, Float minPrice, Float maxPrice, Integer page, Integer pageLimit);
 
     ProductsDTO getProductsByCategoryAndBrand(Long categoryId, Integer brandId, Float minPrice, Float maxPrice, Integer page, Integer pageLimit);
-
-
 
     /**
      * <h2>Add Product with Multiple Images</h2>
@@ -48,4 +48,8 @@ public interface ProductService {
      * @since   2021-06-19
      */
     ProductDTO addProductWithImages(MultipartFile[] files, String productDTOJson) throws JsonProcessingException;
+  
+    List<ProductDTO> getTheBestOfferForProducts(Long size);
+  
+    List<ProductDTO> getTopRatedProducts(Long size);
 }

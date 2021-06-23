@@ -1,10 +1,8 @@
 package eg.gov.iti.jets.petstore.services.impl;
 
 import eg.gov.iti.jets.petstore.dto.OrderDTO;
-import eg.gov.iti.jets.petstore.entities.CartItem;
-import eg.gov.iti.jets.petstore.entities.Customer;
-import eg.gov.iti.jets.petstore.entities.Order;
-import eg.gov.iti.jets.petstore.entities.OrderItems;
+import eg.gov.iti.jets.petstore.entities.*;
+import eg.gov.iti.jets.petstore.enums.OrderStatus;
 import eg.gov.iti.jets.petstore.repositories.CustomerRepository;
 import eg.gov.iti.jets.petstore.repositories.OrderRepository;
 import eg.gov.iti.jets.petstore.repositories.ProductRepository;
@@ -60,6 +58,7 @@ public class OrderServiceImpl implements OrderService {
             );
         });
         order.setCustomer(customer);
+        order.setStatus(OrderStatus.COMPLETED);
         Order orderAfterSaved = orderRepository.save(order);
         customer.getShoppingCart().clear();
         customerRepository.save(customer);
