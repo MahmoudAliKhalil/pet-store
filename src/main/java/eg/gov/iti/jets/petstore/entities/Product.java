@@ -36,7 +36,6 @@ public class Product {
     private Set<Rate> rates;
     @OneToMany(mappedBy = "product")
     private Set<OrderItems> orderItems;
-
     @CreationTimestamp
     @Column(name = "created_at")
     private LocalDateTime creationDate = LocalDateTime.now();
@@ -46,11 +45,11 @@ public class Product {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Product product = (Product) o;
-        return Objects.equals(id, product.id) && Objects.equals(name, product.name) && Objects.equals(description, product.description) && Objects.equals(price, product.price) && Objects.equals(quantity, product.quantity) && Objects.equals(category, product.category) && Objects.equals(images, product.images) && Objects.equals(seller, product.seller) && Objects.equals(available, product.available) && Objects.equals(brand, product.brand) && Objects.equals(species, product.species) && Objects.equals(discount, product.discount) && Objects.equals(rates, product.rates) && Objects.equals(orderItems, product.orderItems) && Objects.equals(creationDate, product.creationDate);
+        return id.equals(product.id) && Objects.equals(name, product.name) && Objects.equals(description, product.description) && Objects.equals(price, product.price) && Objects.equals(quantity, product.quantity) && Objects.equals(available, product.available) && Objects.equals(discount, product.discount) && Objects.equals(creationDate, product.creationDate);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, description, price, quantity, category, images, seller, available, brand, species, discount, rates, orderItems, creationDate);
+        return Objects.hash(id, name, description, price, quantity, available, discount, creationDate);
     }
 }
