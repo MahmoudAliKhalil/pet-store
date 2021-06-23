@@ -25,12 +25,13 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public void signUp(UserRegistrationDTO userRegistrationDTO) {
+    public UserRegistrationDTO signUp(UserRegistrationDTO userRegistrationDTO) {
         userRegistrationDTO.setPassword(bCryptPasswordEncoder.encode(userRegistrationDTO.getPassword()));
         User user = modelMapper.map(userRegistrationDTO, User.class);
         user.setActive(true);
         user.setNotLocked(true);
-        userRepository.save(user);
+        User save = userRepository.save(user);
+        return modelMapper.map(save, UserRegistrationDTO.class);
     }
 
     @Override
