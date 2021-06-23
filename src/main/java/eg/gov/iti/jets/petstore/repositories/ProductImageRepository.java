@@ -12,7 +12,7 @@ public interface ProductImageRepository extends JpaRepository<ProductImage, Long
     int deleteProductImageByUrl(String url);
 
     int deleteByProduct_Id(long id);
-
+    //refer to this https://stackoverflow.com/questions/57743272/spring-data-jpa-query-manytomany-select-by-count
     @Query("select i from ProductImage i join Product p where p.id = ?1")
     List<ProductImage> findByProductId(long id);
 

@@ -142,7 +142,7 @@ public class ProductResource {
         return ResponseEntity.status(httpStatus).body(products);
     }
 
-
+    @CrossOrigin
     @PostMapping(value = "/images", consumes = { "multipart/form-data" })
     ResponseEntity<?> writeMultiple(@RequestParam("files") MultipartFile[] files
             , @RequestParam("product") String productDTOJson) throws JsonProcessingException {
