@@ -3,6 +3,8 @@ package eg.gov.iti.jets.petstore.services;
 import eg.gov.iti.jets.petstore.dto.ProductDTO;
 import eg.gov.iti.jets.petstore.dto.ProductsDTO;
 
+import java.util.List;
+
 public interface ProductService {
     ProductsDTO getAllProducts(Float minPrice, Float maxPrice, Integer page, Integer pageLimit);
 
@@ -21,4 +23,7 @@ public interface ProductService {
     ProductsDTO getProductsByBrandId(Integer id, Float minPrice, Float maxPrice, Integer page, Integer pageLimit);
 
     ProductsDTO getProductsByCategoryAndBrand(Long categoryId, Integer brandId, Float minPrice, Float maxPrice, Integer page, Integer pageLimit);
+
+    List<ProductDTO> getTheBestOfferForProducts(Long size);
+    List<ProductDTO> getTopRatedProducts(Long size);
 }

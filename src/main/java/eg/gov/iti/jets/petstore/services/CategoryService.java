@@ -13,4 +13,6 @@ public interface CategoryService {
     CategoryDTO addNewCategory(CategoryDTO categoryDto);
 
     List<ProductDTO> getCategoryProducts(Long id);
+
+    List<CategoryDTO> findTheTopCategories(Long categoryId);
 }

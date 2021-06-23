@@ -40,11 +40,12 @@ public class AuthResource {
             description = "provide User information to SignUp"
     )
     @ApiResponse(responseCode = "201", description = "Successfully SignUp.")
+    @ApiResponse(responseCode = "500", description = "Internal Server Error")
     @ApiResponse(responseCode = "400", description = "Bad request, you must provide all the fields", content = @Content)
     @PostMapping("signUp")
-    public ResponseEntity<HttpStatus> signUp ( @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "User Information ToSign Up", required = true) @RequestBody UserRegistrationDTO userRegistrationDTO){
-        authService.signUp(userRegistrationDTO);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+    public ResponseEntity<UserRegistrationDTO> signUp ( @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "User Information ToSign Up", required = true) @RequestBody UserRegistrationDTO userRegistrationDTO){
+        UserRegistrationDTO userInformation = authService.signUp(userRegistrationDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(userInformation);
     }
 
 

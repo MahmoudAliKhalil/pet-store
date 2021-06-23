@@ -1,7 +1,6 @@
 package eg.gov.iti.jets.petstore.services.impl;
 
 import eg.gov.iti.jets.petstore.dto.CategoryDTO;
-import eg.gov.iti.jets.petstore.dto.OrderDTO;
 import eg.gov.iti.jets.petstore.dto.ProductDTO;
 import eg.gov.iti.jets.petstore.entities.Category;
 import eg.gov.iti.jets.petstore.exceptions.ResourceNotFoundException;
@@ -62,4 +61,14 @@ public class CategoryServiceImpl implements CategoryService {
                 .stream()
                 .map(e->modelMapper.map(e, ProductDTO.class))
                 .collect(Collectors.toList());    }
+
+    @Override
+    public List<CategoryDTO> findTheTopCategories(Long categoryId) {
+        return categoryRepository.findTheTopCategories(categoryId)
+                .stream()
+                .map(category -> modelMapper.map(category, CategoryDTO.class))
+                .collect(Collectors.toList());
+    }
+
+
 }

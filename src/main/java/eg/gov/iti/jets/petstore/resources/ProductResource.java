@@ -14,6 +14,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping(path = "products", produces = MediaType.APPLICATION_JSON_VALUE)
 public class ProductResource {
@@ -136,6 +138,25 @@ public class ProductResource {
         ProductsDTO products = productService.getProductsByCategoryAndBrand(categoryId, brandId, minPrice, maxPrice, page, pageLimit);
         HttpStatus httpStatus = products.getProducts().isEmpty() ? HttpStatus.NO_CONTENT : HttpStatus.OK;
         return ResponseEntity.status(httpStatus).body(products);
+    }
+
+    @Operation(summary = "find Special Offers product.",
+            description = "Retrieve all Special Offers product.")
+    @ApiResponse(responseCode = "204", description = "Empty list of product", content = @Content)
+    @ApiResponse(responseCode = "200", description = "Successfully retrieve all product.")
+    @GetMapping(params = {"size"})
+    public ResponseEntity<List<ProductDTO>> getSpecialOffersProducts(@Parameter(description = "Number of accounts in the page.", example = "3") @RequestParam(name = "size", defaultValue = "3") Long size) {
+        List<ProductDTO> theBestOfferForProducts = productService.getTheBestOfferForProducts(size);
+        return ResponseEntity.status(HttpStatus.OK).body(theBestOfferForProducts);
+    }
+    @Operation(summary = "find Top Rated Products.",
+            description = "Retrieve all Top Rated Products.")
+    @ApiResponse(responseCode = "204", description = "Empty list of product", content = @Content)
+    @ApiResponse(responseCode = "200", description = "Successfully retrieve all Top Rated Products.")
+    @GetMapping(params = {"rateSize"})
+    public ResponseEntity<List<ProductDTO>> getTopRatedProducts(@Parameter(description = "Number of accounts in the page.", example = "3") @RequestParam(name = "rateSize", defaultValue = "3") Long rateSize) {
+        List<ProductDTO> theBestOfferForProducts = productService.getTopRatedProducts(rateSize);
+        return ResponseEntity.status(HttpStatus.OK).body(theBestOfferForProducts);
     }
 
 }
