@@ -1,18 +1,23 @@
-package eg.gov.iti.jets.petstore.services.impl;
+package eg.gov.iti.jets.petstore.services.Impl;
 
+
+import eg.gov.iti.jets.petstore.dto.ProductDTO;
+import eg.gov.iti.jets.petstore.dto.ProductsDTO;
+import eg.gov.iti.jets.petstore.dto.ServicesDTO;
+import eg.gov.iti.jets.petstore.entities.Product;
+import eg.gov.iti.jets.petstore.entities.Service;
 import eg.gov.iti.jets.petstore.dto.ServiceDTO;
 import eg.gov.iti.jets.petstore.exceptions.ResourceNotFoundException;
 import eg.gov.iti.jets.petstore.repositories.ServiceRepository;
 import eg.gov.iti.jets.petstore.services.ServiceService;
 import org.modelmapper.ModelMapper;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-@Service
+@org.springframework.stereotype.Service
 public class ServiceServiceImpl implements ServiceService {
     private final ServiceRepository serviceRepository;
     private final ModelMapper modelMapper;
@@ -22,13 +27,16 @@ public class ServiceServiceImpl implements ServiceService {
         this.modelMapper = modelMapper;
     }
 
+
     @Override
-    public List<ServiceDTO> getAllServices(Integer page,Integer pageLimit) {
-        return serviceRepository
-                .findAll(Pageable.ofSize(pageLimit).withPage(page))
-                .stream()
-                .map(e->modelMapper.map(e,ServiceDTO.class))
-                .collect(Collectors.toList());
+    public ServicesDTO getAllServices(Float minPrice, Float maxPrice, Integer page, Integer pageLimit) {
+        Page<Service> services = serviceRepository.findAllByPriceBetween(minPrice, maxPrice, Pageable.ofSize(pageLimit).withPage(page));
+        return ServicesDTO.builder()
+                .count(services.getTotalElements())
+                .services(services.stream()
+                        .map(e -> modelMapper.map(e, ServiceDTO.class))
+                        .collect(Collectors.toList()))
+                .build();
     }
 
     @Override
@@ -64,6 +72,21 @@ public class ServiceServiceImpl implements ServiceService {
         }
     }
 
+    private ServicesDTO buildServicesDTO(Long count, Stream<Service> services) {
+        return ServicesDTO.builder()
+                .count(count)
+                .services(
+                        services.map(e -> modelMapper.map(e, ServiceDTO.class))
+                                .collect(Collectors.toList())
+                ).build();
+    }
+
     @Override
     public void deleteAllServices() { serviceRepository.deleteAll();}
+
+    @Override
+    public ServicesDTO getServicesByTypeId(Long id, Float minPrice, Float maxPrice, Integer page, Integer pageLimit) {
+        Page<Service> services = serviceRepository.findServicesByType_IdAndPriceBetween(id, minPrice, maxPrice, Pageable.ofSize(pageLimit).withPage(page));
+        return buildServicesDTO(services.getTotalElements(), services.get());
+    }
 }

@@ -1,7 +1,7 @@
 package eg.gov.iti.jets.petstore.resources;
 
 import eg.gov.iti.jets.petstore.dto.ServiceDTO;
-import eg.gov.iti.jets.petstore.dto.ServiceDTO;
+import eg.gov.iti.jets.petstore.dto.ServicesDTO;
 import eg.gov.iti.jets.petstore.exceptions.models.ErrorDetails;
 import eg.gov.iti.jets.petstore.services.ServiceService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -14,7 +14,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @RestController
 @RequestMapping(path = "services", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -25,15 +24,17 @@ public class ServiceResource {
         this.serviceService = serviceService;
     }
 
-    @Operation(summary = "find all services.",
-            description = "Retrieve all services.")
-    @ApiResponse(responseCode = "204", description = "Empty list of services.", content = @Content)
-    @ApiResponse(responseCode = "200", description = "Successfully retrieve services.")
+    @Operation(summary = "find all service.",
+            description = "Retrieve all service.")
+    @ApiResponse(responseCode = "204", description = "Empty list of service", content = @Content)
+    @ApiResponse(responseCode = "200", description = "Successfully retrieve all service.")
     @GetMapping
-    public ResponseEntity<List<ServiceDTO>> getServices(@Parameter(description = "Number of pages to retrieve.", example = "0") @RequestParam(name = "page", defaultValue = "0") Integer page,
-                                                      @Parameter(description = "Number of accounts in the page.", example = "10") @RequestParam(name = "pageLimit", defaultValue = "10") Integer pageLimit) {
-        List<ServiceDTO> services = serviceService.getAllServices(page, pageLimit);
-        HttpStatus httpStatus = services.isEmpty() ? HttpStatus.NO_CONTENT : HttpStatus.OK;
+    public ResponseEntity<ServicesDTO> getServices(@Parameter(description = "Minimum price of Services.", example = "0") @RequestParam(name = "price.lt", defaultValue = "0") Float minPrice,
+                                                   @Parameter(description = "Maximum price of Services.", example = "10000") @RequestParam(name = "price.gt", defaultValue = "" + Float.MAX_VALUE) Float maxPrice,
+                                                   @Parameter(description = "Number of pages to retrieve.", example = "0") @RequestParam(name = "page", defaultValue = "0") Integer page,
+                                                   @Parameter(description = "Number of accounts in the page.", example = "10") @RequestParam(name = "pageLimit", defaultValue = "10") Integer pageLimit) {
+        ServicesDTO services = serviceService.getAllServices(minPrice, maxPrice, page, pageLimit);
+        HttpStatus httpStatus = services.getServices().isEmpty() ? HttpStatus.NO_CONTENT : HttpStatus.OK;
         return ResponseEntity.status(httpStatus).body(services);
     }
 
@@ -87,5 +88,20 @@ public class ServiceResource {
     @ResponseStatus(HttpStatus.OK)
     public void deleteServices(@Parameter(description = "Service unique identifier.", example = "123", required = true) @PathVariable("id") Long id) {
         serviceService.deleteService(id);
+    }
+
+    @Operation(summary = "find type's services.",
+            description = "Retrieve all services belonging to specific type.")
+    @ApiResponse(responseCode = "204", description = "Empty list of service", content = @Content)
+    @ApiResponse(responseCode = "200", description = "Successfully retrieve all service.")
+    @GetMapping(params = {"typeId"})
+    public ResponseEntity<ServicesDTO> getTypeServices(@Parameter(description = "Type unique identifier.", example = "1") @RequestParam(name = "typeId") Long typeId,
+                                                           @Parameter(description = "Minimum price of services.", example = "0") @RequestParam(name = "price.lt", defaultValue = "0") Float minPrice,
+                                                           @Parameter(description = "Maximum price of services.", example = "10000") @RequestParam(name = "price.gt", defaultValue = "" + Float.MAX_VALUE) Float maxPrice,
+                                                           @Parameter(description = "Number of pages to retrieve.", example = "0") @RequestParam(name = "page", defaultValue = "0") Integer page,
+                                                           @Parameter(description = "Number of accounts in the page.", example = "10") @RequestParam(name = "pageLimit", defaultValue = "10") Integer pageLimit) {
+        ServicesDTO services = serviceService.getServicesByTypeId(typeId, minPrice, maxPrice, page, pageLimit);
+        HttpStatus httpStatus = services.getServices().isEmpty() ? HttpStatus.NO_CONTENT : HttpStatus.OK;
+        return ResponseEntity.status(httpStatus).body(services);
     }
 }
