@@ -20,12 +20,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -110,13 +111,13 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<ProductDTO> getTheBestOfferForProducts(Long size) {
-        return productRepository.getTheBestOfferForProducts(size).stream().map(p->
-            modelMapper.map(p, ProductDTO.class)).collect(Collectors.toList());
+        return productRepository.getTheBestOfferForProducts(size).stream().map(p ->
+                modelMapper.map(p, ProductDTO.class)).collect(Collectors.toList());
     }
 
     @Override
     public List<ProductDTO> getTopRatedProducts(Long size) {
-        return productRepository.getTheTopRatedProductsProducts(size).stream().map(p->
+        return productRepository.getTheTopRatedProductsProducts(size).stream().map(p ->
                 modelMapper.map(p, ProductDTO.class)).collect(Collectors.toList());
     }
 
@@ -129,54 +130,47 @@ public class ProductServiceImpl implements ProductService {
                 ).build();
     }
 
-    @Async
     @Override
+    @Transactional
     public ProductDTO addProductWithImages(MultipartFile[] files, String productDTOJson) throws JsonProcessingException {
         Product product = new ObjectMapper().readValue(productDTOJson, Product.class);
+        if (product.getImages() == null) {
+            product.setImages(new HashSet<>());
+        }
+        if (files != null) {
+            Arrays.stream(files).forEach(file -> {
+                try {
+                    ObjectMetadata metadata = new ObjectMetadata();
+                    metadata.setContentLength(file.getSize());
+                    final String keyName = product.getCategory().getName() + '/' +
+                            product.getName() + '/' +
+                            file.getOriginalFilename();
+                    amazonS3.putObject(bucketName, keyName, file.getInputStream(), metadata);
+                    logger.info("Url Object: {}", amazonS3.getUrl(bucketName, keyName));
 
+                    ProductImage image = ProductImage.builder()
+                            .name(file.getOriginalFilename())
+                            .url(amazonS3.getUrl(bucketName, keyName).toString())
+                            .product(product)
+                            .build();
+                    product.getImages().add(image);
 
-        logger.info("productDTO before converting to object: ", productDTOJson);
-        logger.info("Product after converting from json: {}", product);
-        product.getImages().clear();
-        logger.info("Product before persist: {}", product);
-        Arrays.asList(files).stream().forEach(file ->
-                {
-                    logger.info("File data: " + file.getOriginalFilename());
-                    try {
-                        ObjectMetadata metadata = new ObjectMetadata();
-                        metadata.setContentLength(file.getSize());
-                        final String keyName = product.getCategory().getName() + '/' +
-                                product.getName() + '/' +
-                                file.getOriginalFilename();
-                        amazonS3.putObject(bucketName, keyName, file.getInputStream(), metadata);
-                        logger.info("Url Object: {}", amazonS3.getUrl(bucketName, keyName));
-
-                        ProductImage image = ProductImage.builder()
-                                .name(file.getOriginalFilename())
-                                .url(amazonS3.getUrl(bucketName, keyName).toString())
-                                .product(product)
-                                .build();
-                        product.getImages().add(image);
-
-                    } catch (IOException ioe) {
-                        logger.error("IOException: {}", ioe.getMessage());
-                    } catch (AmazonServiceException ase) {
-                        logAmazonServiceException(ase);
-                    } catch (AmazonClientException ace) {
-                        logger.error("Caught an AmazonClientException: ", ace);
-                        logger.info("Error Message: {}", ace.getMessage());
-                    }
+                } catch (IOException ioe) {
+                    logger.error("IOException: {}", ioe.getMessage());
+                } catch (AmazonServiceException ase) {
+                    logAmazonServiceException(ase);
+                } catch (AmazonClientException ace) {
+                    logger.error("Caught an AmazonClientException: ", ace);
+                    logger.info("Error Message: {}", ace.getMessage());
                 }
-        );
-        logger.info("Product to persist: {}", product);
+            });
+        }
         return new ModelMapper().map(productRepository.save(product), ProductDTO.class);
-
     }
 
     private void logAmazonServiceException(AmazonServiceException ase) {
         logger.error(" The call was transmitted successfully, but Amazon S3 couldn't process \n" +
                 "it, so it returned an error response., rejected reasons: ", ase);
-
         logger.info("Error Message: {}", ase.getMessage());
         logger.info("HTTP Status Code: {}", ase.getStatusCode());
         logger.info("AWS Error Code: {}", ase.getErrorCode());

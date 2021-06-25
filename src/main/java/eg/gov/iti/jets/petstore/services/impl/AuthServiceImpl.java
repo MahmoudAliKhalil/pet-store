@@ -3,17 +3,25 @@ package eg.gov.iti.jets.petstore.services.impl;
 import eg.gov.iti.jets.petstore.dto.UserLoginDTO;
 import eg.gov.iti.jets.petstore.dto.UserRegistrationDTO;
 import eg.gov.iti.jets.petstore.entities.User;
+import eg.gov.iti.jets.petstore.enums.Roles;
 import eg.gov.iti.jets.petstore.repositories.UserRepository;
 import eg.gov.iti.jets.petstore.security.model.CustomUserDetails;
 import eg.gov.iti.jets.petstore.services.AuthService;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Service
 public class AuthServiceImpl implements AuthService {
+    @Value("${secret.password}")
+    private String password;
+
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
@@ -44,5 +52,21 @@ public class AuthServiceImpl implements AuthService {
         User user = userRepository.findUserByEmail(email);
         return new CustomUserDetails(user);
     }
+    @Override
+    public Boolean isUserEmailExist(String email) {
+        return userRepository.existsByEmail(email);
+    }
 
+    @Override
+    public CustomUserDetails addNewUser(String email) {
+        User user = new User();
+        user.setEmail(email);
+        user.setPassword(bCryptPasswordEncoder.encode(password));
+        user.setRole(Roles.ROLE_CUSTOMER);
+        user.setActive(true);
+        user.setNotLocked(true);
+
+        User newUser = userRepository.save(user);
+        return new CustomUserDetails(newUser);
+    }
 }

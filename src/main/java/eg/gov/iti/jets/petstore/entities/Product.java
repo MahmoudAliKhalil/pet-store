@@ -22,7 +22,7 @@ public class Product {
     private Integer quantity;
     @ManyToOne
     private Category category;
-    @OneToMany(mappedBy = "product")
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<ProductImage> images;
     @ManyToOne
     private User seller;

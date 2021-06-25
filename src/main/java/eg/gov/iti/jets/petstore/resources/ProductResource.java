@@ -16,8 +16,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Arrays;
-
 import java.util.List;
 
 @RestController
@@ -144,18 +142,10 @@ public class ProductResource {
         return ResponseEntity.status(httpStatus).body(products);
     }
 
-    @PostMapping(value = "/images", consumes = { "multipart/form-data" })
-    ResponseEntity<?> writeMultiple(@RequestParam("files") MultipartFile[] files
-            , @RequestParam("product") String productDTOJson) throws JsonProcessingException {
-
+    @PostMapping(value = "/images")
+    public ResponseEntity<ProductDTO> writeMultiple(@RequestParam(value = "files", required = false) MultipartFile[] files, @RequestParam("product") String productDTOJson) throws JsonProcessingException {
         ProductDTO returnedProductDTO = productService.addProductWithImages(files, productDTOJson);
-        System.out.println("Returned ProductDTO: "+ returnedProductDTO);
-        Arrays.asList(files).stream().forEach(file ->
-                {
-                    System.out.println("File data: " + file.getOriginalFilename());
-                }
-        );
-        return ResponseEntity.ok().body(returnedProductDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(returnedProductDTO);
     }
 
     @Operation(summary = "find Special Offers product.",
@@ -167,6 +157,7 @@ public class ProductResource {
         List<ProductDTO> theBestOfferForProducts = productService.getTheBestOfferForProducts(size);
         return ResponseEntity.status(HttpStatus.OK).body(theBestOfferForProducts);
     }
+
     @Operation(summary = "find Top Rated Products.",
             description = "Retrieve all Top Rated Products.")
     @ApiResponse(responseCode = "204", description = "Empty list of product", content = @Content)
