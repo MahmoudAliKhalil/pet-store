@@ -37,6 +37,6 @@ public class ServiceDTO {
     @Schema(description = "Data of the service provider")
     private ServiceProviderDTO provider;
     @Schema(description = "Type of the service")
-    private ServiceType type;
+    private ServiceTypeDTO type;
 
 }
