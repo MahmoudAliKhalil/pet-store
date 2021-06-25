@@ -6,7 +6,7 @@ import eg.gov.iti.jets.petstore.security.model.CustomUserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 public interface AuthService extends UserDetailsService {
-    void signUp(UserRegistrationDTO userRegistrationDTO);
+    UserRegistrationDTO signUp(UserRegistrationDTO userRegistrationDTO);
     String signIn(UserLoginDTO userLoginDTO);
     Boolean isUserEmailExist(String email);
     CustomUserDetails addNewUser(String email);

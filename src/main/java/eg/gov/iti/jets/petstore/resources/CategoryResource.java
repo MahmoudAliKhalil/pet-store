@@ -63,6 +63,19 @@ public class CategoryResource {
     }
 
 
+    @Operation(summary = "Get The first 3 Categories",
+            description = "Retrieve The first 3 available categories"
+    )
+    @ApiResponse(responseCode = "200", description = "Successfully retrieve The first 3 categories.")
+    @ApiResponse(responseCode = "204", description = "No Content")
+    @ApiResponse(responseCode = "404", description = "categories not found.", content = @Content(schema = @Schema(implementation = ErrorDetails.class)))
+    @GetMapping(params ={"size"})
+    public ResponseEntity<List<CategoryDTO>> getTopThreeCategories(@Parameter(description = "Category size.", example = "3") @RequestParam(name = "size") Long size) {
+        List<CategoryDTO> allCategory = categoryService.findTheTopCategories(size);
+        return ResponseEntity.status(HttpStatus.OK).body(allCategory);
+    }
+
+
     @Operation(summary = "Add new category", description = "Add new category for exists categories")
     @ApiResponse(responseCode = "200", description = "Successfully added new category.")
     @ApiResponse(responseCode = "400", description = "Bad request, you must provide all the fields", content = @Content(schema = @Schema(implementation = ErrorDetails.class)))
