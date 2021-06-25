@@ -2,6 +2,7 @@ package eg.gov.iti.jets.petstore.services;
 
 import eg.gov.iti.jets.petstore.dto.CustomerDTO;
 import eg.gov.iti.jets.petstore.dto.OrderDTO;
+import eg.gov.iti.jets.petstore.security.model.CustomUserDetails;
 
 import java.util.List;
 
@@ -19,4 +20,6 @@ public interface CustomerService {
     void deleteAllCustomers();
 
     List<OrderDTO> getCustomerOrders(Long id);
+
+
 }
