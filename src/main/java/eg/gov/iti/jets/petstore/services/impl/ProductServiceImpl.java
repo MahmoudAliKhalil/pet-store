@@ -1,4 +1,4 @@
-package eg.gov.iti.jets.petstore.services.Impl;
+package eg.gov.iti.jets.petstore.services.impl;
 
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.AmazonServiceException;
@@ -141,7 +141,7 @@ public class ProductServiceImpl implements ProductService {
         logger.info("Product before persist: {}", product);
         Arrays.asList(files).stream().forEach(file ->
                 {
-                    System.out.println("File data: " + file.getOriginalFilename());
+                    logger.info("File data: " + file.getOriginalFilename());
                     try {
                         ObjectMetadata metadata = new ObjectMetadata();
                         metadata.setContentLength(file.getSize());

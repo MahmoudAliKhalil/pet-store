@@ -1,4 +1,4 @@
-package eg.gov.iti.jets.petstore.services.Impl;
+package eg.gov.iti.jets.petstore.services.impl;
 
 import eg.gov.iti.jets.petstore.dto.UserLoginDTO;
 import eg.gov.iti.jets.petstore.dto.UserRegistrationDTO;

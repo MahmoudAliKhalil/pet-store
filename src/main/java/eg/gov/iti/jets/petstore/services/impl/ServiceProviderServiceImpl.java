@@ -1,4 +1,4 @@
-package eg.gov.iti.jets.petstore.services.Impl;
+package eg.gov.iti.jets.petstore.services.impl;
 
 import eg.gov.iti.jets.petstore.dto.ServiceDTO;
 import eg.gov.iti.jets.petstore.dto.ServiceProviderDTO;
@@ -13,7 +13,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -49,9 +48,12 @@ public class ServiceProviderServiceImpl implements ServiceProviderService {
 
     @Override
     public ServiceProviderDTO updateServiceProvider(Long id, ServiceProviderDTO serviceProvider) {
-        serviceProviderRepository.findById(id).orElseThrow(()->new ResourceNotFoundException("ServiceProvider with id: " + id + " not found."));
-        serviceProvider.setId(id);
-        return modelMapper.map(serviceProviderRepository.save(modelMapper.map(serviceProvider, ServiceProvider.class)), ServiceProviderDTO.class);
+        if (serviceProviderRepository.existsById(id)) {
+            serviceProvider.setId(id);
+            return modelMapper.map(serviceProviderRepository.save(modelMapper.map(serviceProvider, ServiceProvider.class)), ServiceProviderDTO.class);
+        } else {
+            throw new ResourceNotFoundException("ServiceProvider with id: " + id + " not found.");
+        }
     }
 
     @Override
@@ -65,12 +67,14 @@ public class ServiceProviderServiceImpl implements ServiceProviderService {
     }
 
     @Override
-    public void deleteAllServiceProviders() { serviceProviderRepository.deleteAllInBatch(); }
+    public void deleteAllServiceProviders() {
+        serviceProviderRepository.deleteAllInBatch();
+    }
 
     @Override
     public ServiceDTO getProviderService(Long id) {
         return serviceProviderRepository.findById(id)
-                .map(e->modelMapper.map(e.getService(),ServiceDTO.class))
-                .orElseThrow(()->new ResourceNotFoundException("ServiceProvider with id: " + id + " not found."));
+                .map(e -> modelMapper.map(e.getService(), ServiceDTO.class))
+                .orElseThrow(() -> new ResourceNotFoundException("ServiceProvider with id: " + id + " not found."));
     }
 }

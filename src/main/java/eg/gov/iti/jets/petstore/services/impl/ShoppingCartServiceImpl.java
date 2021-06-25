@@ -1,4 +1,4 @@
-package eg.gov.iti.jets.petstore.services.Impl;
+package eg.gov.iti.jets.petstore.services.impl;
 
 import eg.gov.iti.jets.petstore.dto.CartItemDTO;
 import eg.gov.iti.jets.petstore.dto.ProductDTO;
@@ -9,13 +9,11 @@ import eg.gov.iti.jets.petstore.exceptions.ResourceBadRequestException;
 import eg.gov.iti.jets.petstore.exceptions.ResourceNotFoundException;
 import eg.gov.iti.jets.petstore.repositories.CustomerRepository;
 import eg.gov.iti.jets.petstore.repositories.ProductRepository;
-import eg.gov.iti.jets.petstore.repositories.ShoppingCartRepository;
 import eg.gov.iti.jets.petstore.services.ShoppingCartService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -27,14 +25,12 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     private final CustomerRepository customerRepository;
     private final ProductRepository productRepository;
     private final ModelMapper modelMapper;
-    private final ShoppingCartRepository shoppingCartRepository;
 
     @Autowired
-    public ShoppingCartServiceImpl(CustomerRepository customerRepository, ProductRepository productRepository, ModelMapper modelMapper, ShoppingCartRepository shoppingCartRepository) {
+    public ShoppingCartServiceImpl(CustomerRepository customerRepository, ProductRepository productRepository, ModelMapper modelMapper) {
         this.customerRepository = customerRepository;
         this.productRepository = productRepository;
         this.modelMapper = modelMapper;
-        this.shoppingCartRepository = shoppingCartRepository;
     }
 
 
@@ -78,19 +74,10 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         }
 
         shoppingCart.add(cartItem);
-        shoppingCart.stream().forEach(s -> {
-            s.setCustomer(customer);
-        });
+        shoppingCart.stream().forEach(s -> s.setCustomer(customer));
         customer.setShoppingCart(shoppingCart);
-//        try {
-
-            customerRepository.save(customer);
-//        } catch (Exception exception) {
-//            exception.printStackTrace();
-//        }
-
+        customerRepository.save(customer);
         Set<CartItemDTO> shoppingCartDTO = shoppingCart.stream().map(s -> modelMapper.map(s, CartItemDTO.class)).collect(Collectors.toSet());
-        System.out.println("shoppingCartDTO " + shoppingCartDTO);
         return shoppingCartDTO;
     }
 
@@ -98,27 +85,31 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     @Override
     public Set<CartItemDTO> removeProductFromShoppingCart(Long customerId, Long productId) {
         //To handle bad request
-        productRepository.findById(productId)
-                .orElseThrow(() -> new ResourceNotFoundException("Product with id " + productId + " not found"));
-
-        Customer customer = customerRepository.findById(customerId).orElseThrow(() -> new ResourceNotFoundException("Customer with id " + customerId + " not found"));
-        Set<CartItem> shoppingCart = customer.getShoppingCart();
-        Optional<CartItem> optionalItem = shoppingCart.stream().filter(s -> s.getProduct().getId() == productId).findFirst();
-        if (optionalItem.isPresent())
-            shoppingCart.remove(optionalItem.get());
-
-        customer.setShoppingCart(shoppingCart);
-        customerRepository.save(customer);
-        Set<CartItemDTO> shoppingCartDTO = shoppingCart.stream().map(s -> modelMapper.map(s, CartItemDTO.class)).collect(Collectors.toSet());
-        return shoppingCartDTO;
+        if (productRepository.existsById(productId)) {
+            Customer customer = customerRepository.findById(customerId)
+                    .orElseThrow(() -> new ResourceNotFoundException("Customer with id " + customerId + " not found"));
+            Set<CartItem> shoppingCart = customer.getShoppingCart();
+            shoppingCart.stream()
+                    .filter(s -> s.getProduct().getId() == productId)
+                    .findFirst()
+                    .ifPresent(item -> shoppingCart.remove(item));
+            customer.setShoppingCart(shoppingCart);
+            customerRepository.save(customer);
+            return shoppingCart.stream()
+                    .map(s -> modelMapper.map(s, CartItemDTO.class))
+                    .collect(Collectors.toSet());
+        } else {
+            throw new ResourceNotFoundException("Product with id " + productId + " not found");
+        }
     }
 
     @Override
     public Set<CartItemDTO> getShoppingCartByCustomerId(Long customerId) {
         Customer customer = customerRepository.findById(customerId).orElseThrow(() -> new ResourceNotFoundException("Customer with id " + customerId + " not found"));
         Set<CartItem> shoppingCart = customer.getShoppingCart();
-        Set<CartItemDTO> shoppingCartDTO = shoppingCart.stream().map(s -> modelMapper.map(s, CartItemDTO.class)).collect(Collectors.toSet());
-        return shoppingCartDTO;
+        return shoppingCart.stream()
+                .map(s -> modelMapper.map(s, CartItemDTO.class))
+                .collect(Collectors.toSet());
     }
 
 //    @Override
@@ -128,7 +119,6 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 ////        updateProductQuantityAfterCheckout(cartItemDTOS, itemFromStock);
 //        return itemFromStock;
 //    }
-
 
 
     private void checkProductInStock(Set<CartItemDTO> cartItemDTOS, Map<Long, Boolean> itemFromStock) {
