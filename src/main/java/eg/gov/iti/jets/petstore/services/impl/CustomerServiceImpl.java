@@ -7,6 +7,7 @@ import eg.gov.iti.jets.petstore.entities.Customer;
 import eg.gov.iti.jets.petstore.entities.Order;
 import eg.gov.iti.jets.petstore.exceptions.ResourceNotFoundException;
 import eg.gov.iti.jets.petstore.repositories.CustomerRepository;
+import eg.gov.iti.jets.petstore.security.model.CustomUserDetails;
 import eg.gov.iti.jets.petstore.services.CustomerService;
 import org.modelmapper.ModelMapper;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -77,4 +78,6 @@ public class CustomerServiceImpl implements CustomerService {
                 .map(e->modelMapper.map(e, OrderDTO.class))
                 .collect(Collectors.toList());
     }
+
+
 }
