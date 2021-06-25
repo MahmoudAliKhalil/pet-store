@@ -1,14 +1,15 @@
 package eg.gov.iti.jets.petstore.dto;
 
-import eg.gov.iti.jets.petstore.entities.ServiceProvider;
-import eg.gov.iti.jets.petstore.entities.ServiceType;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import java.time.Duration;
 import java.time.LocalTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Setter
 @Getter
@@ -34,9 +35,12 @@ public class ServiceDTO {
     private Duration timePerService;
     @Schema(description = "If Service is provided from home or not")
     private Boolean deliverable;
+    @Schema(description = "Service image")
+    private String imageUrl;
     @Schema(description = "Data of the service provider")
     private ServiceProviderDTO provider;
     @Schema(description = "Type of the service")
     private ServiceTypeDTO type;
-
+    @Schema(description = "Service rates")
+    private Set<ServiceRateDTO> rates = new HashSet<>(0);
 }

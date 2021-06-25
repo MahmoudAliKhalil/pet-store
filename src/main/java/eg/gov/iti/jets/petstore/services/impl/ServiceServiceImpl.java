@@ -7,11 +7,14 @@ import eg.gov.iti.jets.petstore.entities.Service;
 import eg.gov.iti.jets.petstore.exceptions.ResourceNotFoundException;
 import eg.gov.iti.jets.petstore.repositories.ServiceRepository;
 import eg.gov.iti.jets.petstore.services.ServiceService;
+import eg.gov.iti.jets.petstore.utils.FileUploader;
 import org.modelmapper.ModelMapper;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -19,10 +22,13 @@ import java.util.stream.Stream;
 public class ServiceServiceImpl implements ServiceService {
     private final ServiceRepository serviceRepository;
     private final ModelMapper modelMapper;
+    private final FileUploader fileUploader;
 
-    public ServiceServiceImpl(ServiceRepository serviceRepository, ModelMapper modelMapper) {
+
+    public ServiceServiceImpl(ServiceRepository serviceRepository, ModelMapper modelMapper, FileUploader fileUploader) {
         this.serviceRepository = serviceRepository;
         this.modelMapper = modelMapper;
+        this.fileUploader = fileUploader;
     }
 
 
@@ -45,16 +51,18 @@ public class ServiceServiceImpl implements ServiceService {
     }
 
     @Override
-    public ServiceDTO addService(ServiceDTO serviceDTO) {
+    public ServiceDTO addService(ServiceDTO serviceDTO, MultipartFile image) {
+        serviceDTO.setImageUrl(fileUploader.upload(image, serviceDTO.getType().getName(), serviceDTO.getName()));
         return modelMapper
                 .map(serviceRepository.save(modelMapper.map(serviceDTO, eg.gov.iti.jets.petstore.entities.Service.class)), ServiceDTO.class);
-
     }
 
     @Override
-    public ServiceDTO updateService(Long id, ServiceDTO serviceDTO) {
+    public ServiceDTO updateService(Long id, ServiceDTO serviceDTO, Optional<MultipartFile> image) {
         if (serviceRepository.existsById(id)) {
             serviceDTO.setId(id);
+            image.map(img -> fileUploader.upload(img, serviceDTO.getType().getName(), serviceDTO.getName()))
+                    .ifPresent(serviceDTO::setImageUrl);
             return modelMapper
                     .map(serviceRepository.save(modelMapper.map(serviceDTO, eg.gov.iti.jets.petstore.entities.Service.class)), ServiceDTO.class);
         } else {
