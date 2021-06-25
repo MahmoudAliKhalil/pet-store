@@ -60,8 +60,8 @@ public class OrderResource {
     @Operation(summary = "Add new order.",
             description = "Insert new order.")
     @ApiResponse(responseCode = "500", description = "Interval Server Error.")
-    @ApiResponse(responseCode = "201", description = "Successfully created product.")
-    @ApiResponse(responseCode = "400", description = "Illegal representation of the product.", content = @Content(schema = @Schema(implementation = ErrorDetails.class)))
+    @ApiResponse(responseCode = "201", description = "Successfully created Order.")
+    @ApiResponse(responseCode = "400", description = "Illegal representation of the Order.", content = @Content(schema = @Schema(implementation = ErrorDetails.class)))
     @PostMapping
     public ResponseEntity<OrderDTO> createNewOrder(@io.swagger.v3.oas.annotations.parameters.RequestBody(description = "order information.", required = true) @RequestBody OrderDTO orderDTO,
                                                    @Parameter(description = "Customer identifier.", example = "123", required = true) @PathVariable("id") Long customerId) {
