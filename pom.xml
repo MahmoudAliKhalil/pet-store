@@ -70,11 +70,7 @@
             <version>${aws.sdk.version}</version>
         </dependency>
 
-        <!-- gson -->
-        <dependency>
-            <groupId>com.google.code.gson</groupId>
-            <artifactId>gson</artifactId>
-        </dependency>
+
         <!-- stripe -->
         <dependency>
             <groupId>com.stripe</groupId>
