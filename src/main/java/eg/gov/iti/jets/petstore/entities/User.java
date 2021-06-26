@@ -2,6 +2,7 @@ package eg.gov.iti.jets.petstore.entities;
 
 import eg.gov.iti.jets.petstore.enums.Gender;
 import eg.gov.iti.jets.petstore.enums.Roles;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -21,6 +22,8 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private String firstName;
+    private String lastName;
     @Column(unique = true)
     private String email;
     @Column(nullable = false)

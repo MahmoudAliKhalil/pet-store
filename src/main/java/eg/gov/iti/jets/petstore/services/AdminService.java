@@ -1,6 +1,7 @@
 package eg.gov.iti.jets.petstore.services;
 
 import eg.gov.iti.jets.petstore.dto.AdminDTO;
+import eg.gov.iti.jets.petstore.dto.UserRegistrationDTO;
 
 import java.util.List;
 
@@ -16,4 +17,6 @@ public interface AdminService {
     void deleteAdmin(Long id);
 
     void deleteAllAdmins();
+    void signUp(UserRegistrationDTO userRegistrationDTO);
+
 }

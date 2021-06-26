@@ -22,6 +22,7 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: update
+    database: MYSQL
 
     properties:
       hibernate:
@@ -40,3 +41,14 @@ google:
    id: 150394644628-b6rfj7tbi4pv0cguooulnsomi7a4p1qv.apps.googleusercontent.com
 secret:
    password: 12345
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+    shutdown:
+      enabled: true
+    health:
+      show-details: always
+

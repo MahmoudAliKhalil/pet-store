@@ -2,6 +2,7 @@ package eg.gov.iti.jets.petstore.resources;
 
 import eg.gov.iti.jets.petstore.dto.CustomerDTO;
 import eg.gov.iti.jets.petstore.dto.OrderDTO;
+import eg.gov.iti.jets.petstore.dto.UserRegistrationDTO;
 import eg.gov.iti.jets.petstore.exceptions.models.ErrorDetails;
 import eg.gov.iti.jets.petstore.services.CustomerService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -99,5 +100,18 @@ public class CustomerResource {
     @ResponseStatus(HttpStatus.OK)
     public void deleteCustomer(@Parameter(description = "customer account unique identifier.", example = "123", required = true) @PathVariable("id") Long id) {
         customerService.deleteCustomer(id);
+    }
+
+
+    @Operation(summary = "SignUp Customer",
+            description = "provide User information to SignUp"
+    )
+    @ApiResponse(responseCode = "201", description = "Successfully SignUp.")
+    @ApiResponse(responseCode = "400", description = "Bad request, you must provide all the fields", content = @Content)
+    @PostMapping("signUp")
+    public ResponseEntity<HttpStatus> signUp ( @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "User Information ToSign Up", required = true) @RequestBody UserRegistrationDTO userRegistrationDTO){
+        System.out.println("userRegistrationDTO " + userRegistrationDTO);
+        customerService.signUp(userRegistrationDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 }
