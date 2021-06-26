@@ -17,6 +17,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(path = "admins", produces = MediaType.APPLICATION_JSON_VALUE)
+@ApiResponse(responseCode = "500", description = "Internal server error.", content = @Content(schema = @Schema(implementation = ErrorDetails.class)))
 public class AdminResource {
     public final AdminService adminService;
 

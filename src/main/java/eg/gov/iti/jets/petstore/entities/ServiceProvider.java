@@ -19,5 +19,5 @@ import java.util.Set;
 @Setter
 public class ServiceProvider extends User {
     @OneToMany(mappedBy = "provider", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Service> service = new HashSet<>(0);
+    private Set<Service> services = new HashSet<>(0);
 }

@@ -24,6 +24,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 @RestController
 @RequestMapping(path = "/categories", produces = MediaType.APPLICATION_JSON_VALUE)
+@ApiResponse(responseCode = "500", description = "Internal server error.", content = @Content(schema = @Schema(implementation = ErrorDetails.class)))
 public class CategoryResource {
 
     private final CategoryService categoryService;

@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.Duration;
 import java.time.LocalTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -31,8 +30,6 @@ public class ServiceDTO {
     private LocalTime startTime;
     @Schema(description = "End time within work days to provide service")
     private LocalTime endTime;
-    @Schema(description = "Required time to provide service")
-    private Duration timePerService;
     @Schema(description = "If Service is provided from home or not")
     private Boolean deliverable;
     @Schema(description = "Service image")

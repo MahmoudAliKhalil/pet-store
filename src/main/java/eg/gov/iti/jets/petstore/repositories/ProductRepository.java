@@ -18,21 +18,21 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     @Query("UPDATE Product p set p.quantity =:newQuantity where p.id =:productId")
     Integer updateProductQuantity(@Param("newQuantity") Integer newQuantity, @Param("productId") Long productId);
 
-    Page<Product> findAllByPriceBetween(Float minPrice, Float maxPrice, Pageable pageable);
+    Page<Product> findAllByPriceBetweenAndAvailableAndQuantityGreaterThan(Float minPrice, Float maxPrice, Boolean isAvailable, Integer quantity, Pageable pageable);
 
-    Page<Product> findProductsByCategory_IdAndPriceBetween(Long id, Float minPrice, Float maxPrice, Pageable pageable);
+    Page<Product> findProductsByCategory_IdAndPriceBetweenAndAvailableAndQuantityGreaterThan(Long id, Float minPrice, Float maxPrice, Boolean isAvailable, Integer quantity, Pageable pageable);
 
-    Page<Product> findProductsByBrand_IdAndPriceBetween(Integer id, Float minPrice, Float maxPrice, Pageable pageable);
+    Page<Product> findProductsByBrand_IdAndPriceBetweenAndAvailableAndQuantityGreaterThan(Integer id, Float minPrice, Float maxPrice, Boolean isAvailable, Integer quantity, Pageable pageable);
 
-    Page<Product> findProductsByCategory_IdAndBrand_IdAndPriceBetween(Long categoryId, Integer brandId, Float minPrice, Float maxPrice, Pageable pageable);
+    Page<Product> findProductsByCategory_IdAndBrand_IdAndPriceBetweenAndAvailableAndQuantityGreaterThan(Long categoryId, Integer brandId, Float minPrice, Float maxPrice, Boolean isAvailable, Integer quantity, Pageable pageable);
 
-    @Query("SELECT p from Product p where p.id <= :s order by(p.discount)")
+    @Query("SELECT p from Product p where p.id <= :s and p.quantity > 0 and p.available <> false order by(p.discount)")
     List<Product> getTheBestOfferForProducts(Long s);
 
-    @Query("SELECT p from Product p where p.id <= :s order by(p.creationDate)")
+    @Query("SELECT p from Product p where p.id <= :s and p.quantity > 0 and p.available <> false order by(p.creationDate)")
     List<Product> getTheTopRatedProductsProducts(Long s);
 
-    @Query("select p from Product p inner join OrderItems o on o.product.id = p.id group by o.product.id order by count(o.product.id) desc, sum(o.quantity) desc")
+    @Query("select p from Product p inner join OrderItems o on o.product.id = p.id where o.product.quantity > 0 and o.product.available <> false group by o.product.id order by count(o.product.id) desc, sum(o.quantity) desc")
     Page<Product> getTheBestSellersProducts(Pageable pageable);
 
 }

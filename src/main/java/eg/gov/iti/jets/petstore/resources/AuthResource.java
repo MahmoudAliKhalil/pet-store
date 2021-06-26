@@ -5,11 +5,13 @@ import eg.gov.iti.jets.petstore.dto.TokenDTO;
 import eg.gov.iti.jets.petstore.dto.UserLoginDTO;
 import eg.gov.iti.jets.petstore.dto.UserRegistrationDTO;
 import eg.gov.iti.jets.petstore.entities.User;
+import eg.gov.iti.jets.petstore.exceptions.models.ErrorDetails;
 import eg.gov.iti.jets.petstore.security.JwtUtil;
 import eg.gov.iti.jets.petstore.security.model.CustomUserDetails;
 import eg.gov.iti.jets.petstore.services.AuthService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -34,6 +36,7 @@ import java.util.Collections;
 
 @RestController
 @RequestMapping("/auth/")
+@ApiResponse(responseCode = "500", description = "Internal server error.", content = @Content(schema = @Schema(implementation = ErrorDetails.class)))
 public class AuthResource {
 
     @Value("${google.id}")

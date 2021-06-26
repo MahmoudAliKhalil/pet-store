@@ -20,6 +20,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(path = "products", produces = MediaType.APPLICATION_JSON_VALUE)
+@ApiResponse(responseCode = "500", description = "Internal server error.", content = @Content(schema = @Schema(implementation = ErrorDetails.class)))
 public class ProductResource {
 
     public final ProductService productService;

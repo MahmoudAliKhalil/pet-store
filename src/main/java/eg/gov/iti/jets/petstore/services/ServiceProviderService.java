@@ -1,7 +1,7 @@
 package eg.gov.iti.jets.petstore.services;
 
-import eg.gov.iti.jets.petstore.dto.ServiceDTO;
 import eg.gov.iti.jets.petstore.dto.ServiceProviderDTO;
+import eg.gov.iti.jets.petstore.dto.ServicesDTO;
 
 import java.util.List;
 
@@ -18,6 +18,6 @@ public interface ServiceProviderService {
 
     void deleteAllServiceProviders();
 
-    ServiceDTO getProviderService(Long id);
+    ServicesDTO getProviderServices(Long id, Integer page, Integer pageLimit);
 
 }

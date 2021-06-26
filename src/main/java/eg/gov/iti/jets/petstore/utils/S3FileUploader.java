@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 @Component
 public class S3FileUploader implements FileUploader {
     private static final Logger LOGGER = LoggerFactory.getLogger(S3FileUploader.class);
-    private static final String ERROR_MESSAGE = "File cannot be upload right now!\ntry again later.";
+    private static final String ERROR_MESSAGE = "File cannot be upload right now! try again later.";
     private final AmazonS3 amazonS3;
     private final String bucketName;
 

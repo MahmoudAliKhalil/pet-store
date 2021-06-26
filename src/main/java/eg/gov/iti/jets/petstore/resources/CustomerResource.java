@@ -18,6 +18,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(path = "customers", produces = MediaType.APPLICATION_JSON_VALUE)
+@ApiResponse(responseCode = "500", description = "Internal server error.", content = @Content(schema = @Schema(implementation = ErrorDetails.class)))
 public class CustomerResource {
     public final CustomerService customerService;
 

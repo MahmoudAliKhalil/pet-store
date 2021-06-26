@@ -20,6 +20,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping(path = "services", produces = MediaType.APPLICATION_JSON_VALUE)
+@ApiResponse(responseCode = "500", description = "Internal server error.", content = @Content(schema = @Schema(implementation = ErrorDetails.class)))
 public class ServiceResource {
     public final ServiceService serviceService;
 
@@ -31,7 +32,6 @@ public class ServiceResource {
             description = "Retrieve all service.")
     @ApiResponse(responseCode = "204", description = "Empty list of service", content = @Content)
     @ApiResponse(responseCode = "200", description = "Successfully retrieve all service.")
-    @ApiResponse(responseCode = "500", description = "Internal server error.", content = @Content(schema = @Schema(implementation = ErrorDetails.class)))
     @GetMapping
     public ResponseEntity<ServicesDTO> getServices(@Parameter(description = "Minimum price of Services.", example = "0") @RequestParam(name = "price.lt", defaultValue = "0") Float minPrice,
                                                    @Parameter(description = "Maximum price of Services.", example = "10000") @RequestParam(name = "price.gt", defaultValue = "" + Float.MAX_VALUE) Float maxPrice,
@@ -46,7 +46,6 @@ public class ServiceResource {
             description = "Retrieve specific Service.")
     @ApiResponse(responseCode = "200", description = "Successfully retrieve service.")
     @ApiResponse(responseCode = "404", description = "Service not found.", content = @Content(schema = @Schema(implementation = ErrorDetails.class)))
-    @ApiResponse(responseCode = "500", description = "Internal server error.", content = @Content(schema = @Schema(implementation = ErrorDetails.class)))
     @GetMapping("{id}")
     @ResponseStatus(HttpStatus.OK)
     public ServiceDTO getService(@Parameter(description = "Service unique identifier.", example = "123", required = true) @PathVariable("id") Long id) {
@@ -58,7 +57,6 @@ public class ServiceResource {
             description = "Insert new service.")
     @ApiResponse(responseCode = "201", description = "Successfully created service.")
     @ApiResponse(responseCode = "400", description = "Illegal representation of the service.", content = @Content(schema = @Schema(implementation = ErrorDetails.class)))
-    @ApiResponse(responseCode = "500", description = "Internal server error.", content = @Content(schema = @Schema(implementation = ErrorDetails.class)))
     @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     @ResponseStatus(HttpStatus.CREATED)
     public ServiceDTO addService(@io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Service information.", required = true) @RequestPart("service") ServiceDTO service,
@@ -70,7 +68,6 @@ public class ServiceResource {
             description = "Delete all accounts with service privilege.")
     @ApiResponse(responseCode = "200", description = "Successfully delete service accounts.")
     @ApiResponse(responseCode = "404", description = "Service accounts not found.", content = @Content(schema = @Schema(implementation = ErrorDetails.class)))
-    @ApiResponse(responseCode = "500", description = "Internal server error.", content = @Content(schema = @Schema(implementation = ErrorDetails.class)))
     @DeleteMapping
     @ResponseStatus(HttpStatus.OK)
     public void deleteServices() {
@@ -81,7 +78,6 @@ public class ServiceResource {
             description = "Update specific service.")
     @ApiResponse(responseCode = "200", description = "Successfully update service.")
     @ApiResponse(responseCode = "404", description = "Service not found.", content = @Content(schema = @Schema(implementation = ErrorDetails.class)))
-    @ApiResponse(responseCode = "500", description = "Internal server error.", content = @Content(schema = @Schema(implementation = ErrorDetails.class)))
     @PutMapping(path = "{id}", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     @ResponseStatus(HttpStatus.OK)
     public ServiceDTO updateService(@Parameter(description = "Service unique identifier.", example = "123", required = true) @PathVariable("id") Long id,
@@ -94,7 +90,6 @@ public class ServiceResource {
             description = "Delete specific service.")
     @ApiResponse(responseCode = "200", description = "Successfully delete service.")
     @ApiResponse(responseCode = "404", description = "Service not found.", content = @Content(schema = @Schema(implementation = ErrorDetails.class)))
-    @ApiResponse(responseCode = "500", description = "Internal server error.", content = @Content(schema = @Schema(implementation = ErrorDetails.class)))
     @DeleteMapping("{id}")
     @ResponseStatus(HttpStatus.OK)
     public void deleteServices(@Parameter(description = "Service unique identifier.", example = "123", required = true) @PathVariable("id") Long id) {
@@ -105,7 +100,6 @@ public class ServiceResource {
             description = "Retrieve all services belonging to specific type.")
     @ApiResponse(responseCode = "204", description = "Empty list of service", content = @Content)
     @ApiResponse(responseCode = "200", description = "Successfully retrieve all service.")
-    @ApiResponse(responseCode = "500", description = "Internal server error.", content = @Content(schema = @Schema(implementation = ErrorDetails.class)))
     @GetMapping(params = {"typeId"})
     public ResponseEntity<ServicesDTO> getTypeServices(@Parameter(description = "Type unique identifier.", example = "1") @RequestParam(name = "typeId") Long typeId,
                                                        @Parameter(description = "Minimum price of services.", example = "0") @RequestParam(name = "price.lt", defaultValue = "0") Float minPrice,

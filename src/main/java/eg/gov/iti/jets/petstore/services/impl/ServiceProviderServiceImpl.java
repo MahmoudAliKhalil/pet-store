@@ -2,6 +2,7 @@ package eg.gov.iti.jets.petstore.services.impl;
 
 import eg.gov.iti.jets.petstore.dto.ServiceDTO;
 import eg.gov.iti.jets.petstore.dto.ServiceProviderDTO;
+import eg.gov.iti.jets.petstore.dto.ServicesDTO;
 import eg.gov.iti.jets.petstore.entities.ServiceProvider;
 import eg.gov.iti.jets.petstore.exceptions.ResourceBadRequestException;
 import eg.gov.iti.jets.petstore.exceptions.ResourceNotFoundException;
@@ -9,6 +10,7 @@ import eg.gov.iti.jets.petstore.repositories.ServiceProviderRepository;
 import eg.gov.iti.jets.petstore.services.ServiceProviderService;
 import org.modelmapper.ModelMapper;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -72,9 +74,17 @@ public class ServiceProviderServiceImpl implements ServiceProviderService {
     }
 
     @Override
-    public ServiceDTO getProviderService(Long id) {
-        return serviceProviderRepository.findById(id)
-                .map(e -> modelMapper.map(e.getService(), ServiceDTO.class))
-                .orElseThrow(() -> new ResourceNotFoundException("ServiceProvider with id: " + id + " not found."));
+    public ServicesDTO getProviderServices(Long id, Integer page, Integer pageLimit) {
+        if(serviceProviderRepository.existsById(id)) {
+            Page<eg.gov.iti.jets.petstore.entities.Service> providerServices = serviceProviderRepository.getProviderServices(id, Pageable.ofSize(pageLimit).withPage(page));
+            return ServicesDTO.builder()
+                    .count(providerServices.getTotalElements())
+                    .services(providerServices
+                            .map(service -> modelMapper.map(service, ServiceDTO.class))
+                            .getContent())
+                    .build();
+        } else {
+            throw new ResourceNotFoundException("ServiceProvider with id: " + id + " not found.");
+        }
     }
 }

@@ -73,12 +73,16 @@ public class SellerServiceImpl implements SellerService {
 
     @Override
     public ProductsDTO getSellerProducts(Long id, Integer page, Integer pageLimit) {
-        Page<Product> products = sellerRepository.getSellerProducts(id, Pageable.ofSize(pageLimit).withPage(page));
-        return ProductsDTO.builder()
-                .count(products.getTotalElements())
-                .products(products.stream()
-                        .map(e -> modelMapper.map(e, ProductDTO.class))
-                        .collect(Collectors.toList()))
-                .build();
+        if (sellerRepository.existsById(id)) {
+            Page<Product> products = sellerRepository.getSellerProducts(id, Pageable.ofSize(pageLimit).withPage(page));
+            return ProductsDTO.builder()
+                    .count(products.getTotalElements())
+                    .products(products.stream()
+                            .map(e -> modelMapper.map(e, ProductDTO.class))
+                            .collect(Collectors.toList()))
+                    .build();
+        } else {
+            throw new ResourceNotFoundException("Seller with id: " + id + " not found.");
+        }
     }
 }

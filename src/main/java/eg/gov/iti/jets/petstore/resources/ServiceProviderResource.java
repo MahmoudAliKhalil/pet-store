@@ -1,9 +1,8 @@
 package eg.gov.iti.jets.petstore.resources;
 
-import eg.gov.iti.jets.petstore.dto.ServiceDTO;
 import eg.gov.iti.jets.petstore.dto.ServiceProviderDTO;
+import eg.gov.iti.jets.petstore.dto.ServicesDTO;
 import eg.gov.iti.jets.petstore.exceptions.models.ErrorDetails;
-import eg.gov.iti.jets.petstore.services.ServiceProviderService;
 import eg.gov.iti.jets.petstore.services.ServiceProviderService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -19,6 +18,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(path = "serviceproviders", produces = MediaType.APPLICATION_JSON_VALUE)
+@ApiResponse(responseCode = "500", description = "Internal server error.", content = @Content(schema = @Schema(implementation = ErrorDetails.class)))
 public class ServiceProviderResource {
     public final ServiceProviderService serviceProviderService;
 
@@ -32,7 +32,7 @@ public class ServiceProviderResource {
     @ApiResponse(responseCode = "200", description = "Successfully retrieve serviceProvider accounts.")
     @GetMapping
     public ResponseEntity<List<ServiceProviderDTO>> getServiceProviders(@Parameter(description = "Number of pages to retrieve.", example = "0") @RequestParam(name = "page", defaultValue = "0") Integer page,
-                                                      @Parameter(description = "Number of accounts in the page.", example = "10") @RequestParam(name = "pageLimit", defaultValue = "10") Integer pageLimit) {
+                                                                        @Parameter(description = "Number of accounts in the page.", example = "10") @RequestParam(name = "pageLimit", defaultValue = "10") Integer pageLimit) {
         List<ServiceProviderDTO> serviceProviders = serviceProviderService.getAllServiceProviders(page, pageLimit);
         HttpStatus httpStatus = serviceProviders.isEmpty() ? HttpStatus.NO_CONTENT : HttpStatus.OK;
         return ResponseEntity.status(httpStatus).body(serviceProviders);
@@ -51,11 +51,15 @@ public class ServiceProviderResource {
     @Operation(summary = "find specific serviceProvider Service.",
             description = "Retrieve Service related to specific serviceProvider account.")
     @ApiResponse(responseCode = "200", description = "Successfully retrieve serviceProvider Service.")
+    @ApiResponse(responseCode = "204", description = "Empty list of serviceProvider's services.", content = @Content)
     @ApiResponse(responseCode = "404", description = "ServiceProvider account not found.", content = @Content(schema = @Schema(implementation = ErrorDetails.class)))
     @GetMapping("{id}/services")
-    @ResponseStatus(HttpStatus.OK)
-    public ServiceDTO getServiceProviderService(@Parameter(description = "ServiceProvider account unique identifier.", example = "123", required = true) @PathVariable("id") Long id) {
-        return serviceProviderService.getProviderService(id);
+    public ResponseEntity<ServicesDTO> getServiceProviderServices(@Parameter(description = "ServiceProvider account unique identifier.", example = "123", required = true) @PathVariable("id") Long id,
+                                                                  @Parameter(description = "Number of pages to retrieve.", example = "0") @RequestParam(name = "page", defaultValue = "0") Integer page,
+                                                                  @Parameter(description = "Number of accounts in the page.", example = "10") @RequestParam(name = "pageLimit", defaultValue = "10") Integer pageLimit) {
+        ServicesDTO providerServices = serviceProviderService.getProviderServices(id, page, pageLimit);
+        HttpStatus httpStatus = providerServices.getCount() <= 0 ? HttpStatus.NO_CONTENT : HttpStatus.OK;
+        return ResponseEntity.status(httpStatus).body(providerServices);
     }
 
     @Operation(summary = "Add new serviceProvider account.",
@@ -85,7 +89,7 @@ public class ServiceProviderResource {
     @PutMapping("{id}")
     @ResponseStatus(HttpStatus.OK)
     public ServiceProviderDTO updateServiceProvider(@Parameter(description = "ServiceProvider account unique identifier.", example = "123", required = true) @PathVariable("id") Long id,
-                                  @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "ServiceProvider account information.", required = true) @RequestBody ServiceProviderDTO serviceProvider) {
+                                                    @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "ServiceProvider account information.", required = true) @RequestBody ServiceProviderDTO serviceProvider) {
         return serviceProviderService.updateServiceProvider(id, serviceProvider);
     }
 
