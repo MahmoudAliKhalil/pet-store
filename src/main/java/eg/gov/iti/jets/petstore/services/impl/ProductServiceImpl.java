@@ -50,7 +50,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductsDTO getAllProducts(Float minPrice, Float maxPrice, Integer page, Integer pageLimit) {
-        Page<Product> products = productRepository.findAllByPriceBetween(minPrice, maxPrice, Pageable.ofSize(pageLimit).withPage(page));
+        Page<Product> products = productRepository.findAllByPriceBetweenAndAvailableAndQuantityGreaterThan(minPrice, maxPrice, true, 0, Pageable.ofSize(pageLimit).withPage(page));
         return ProductsDTO.builder()
                 .count(products.getTotalElements())
                 .products(products.stream()
@@ -93,19 +93,19 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductsDTO getProductsByCategoryId(Long id, Float minPrice, Float maxPrice, Integer page, Integer pageLimit) {
-        Page<Product> products = productRepository.findProductsByCategory_IdAndPriceBetween(id, minPrice, maxPrice, Pageable.ofSize(pageLimit).withPage(page));
+        Page<Product> products = productRepository.findProductsByCategory_IdAndPriceBetweenAndAvailableAndQuantityGreaterThan(id, minPrice, maxPrice, true, 0, Pageable.ofSize(pageLimit).withPage(page));
         return buildProductsDTO(products.getTotalElements(), products.get());
     }
 
     @Override
     public ProductsDTO getProductsByBrandId(Integer id, Float minPrice, Float maxPrice, Integer page, Integer pageLimit) {
-        Page<Product> products = productRepository.findProductsByBrand_IdAndPriceBetween(id, minPrice, maxPrice, Pageable.ofSize(pageLimit).withPage(page));
+        Page<Product> products = productRepository.findProductsByBrand_IdAndPriceBetweenAndAvailableAndQuantityGreaterThan(id, minPrice, maxPrice, true, 0, Pageable.ofSize(pageLimit).withPage(page));
         return buildProductsDTO(products.getTotalElements(), products.get());
     }
 
     @Override
     public ProductsDTO getProductsByCategoryAndBrand(Long categoryId, Integer brandId, Float minPrice, Float maxPrice, Integer page, Integer pageLimit) {
-        Page<Product> products = productRepository.findProductsByCategory_IdAndBrand_IdAndPriceBetween(categoryId, brandId, minPrice, maxPrice, Pageable.ofSize(pageLimit).withPage(page));
+        Page<Product> products = productRepository.findProductsByCategory_IdAndBrand_IdAndPriceBetweenAndAvailableAndQuantityGreaterThan(categoryId, brandId, minPrice, maxPrice, true, 0, Pageable.ofSize(pageLimit).withPage(page));
         return buildProductsDTO(products.getTotalElements(), products.get());
     }
 
@@ -166,7 +166,6 @@ public class ProductServiceImpl implements ProductService {
             });
         }
         return new ModelMapper().map(productRepository.save(product), ProductDTO.class);
-
     }
 
     private void logAmazonServiceException(AmazonServiceException ase) {

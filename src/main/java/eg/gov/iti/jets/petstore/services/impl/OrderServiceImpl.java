@@ -1,13 +1,15 @@
 package eg.gov.iti.jets.petstore.services.impl;
 
 import eg.gov.iti.jets.petstore.dto.OrderDTO;
-import eg.gov.iti.jets.petstore.entities.*;
+import eg.gov.iti.jets.petstore.entities.CartItem;
+import eg.gov.iti.jets.petstore.entities.Customer;
+import eg.gov.iti.jets.petstore.entities.Order;
+import eg.gov.iti.jets.petstore.entities.OrderItems;
 import eg.gov.iti.jets.petstore.enums.OrderStatus;
 import eg.gov.iti.jets.petstore.repositories.CustomerRepository;
 import eg.gov.iti.jets.petstore.repositories.OrderRepository;
 import eg.gov.iti.jets.petstore.repositories.ProductRepository;
 import eg.gov.iti.jets.petstore.services.OrderService;
-import eg.gov.iti.jets.petstore.services.ShoppingCartService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -52,11 +54,10 @@ public class OrderServiceImpl implements OrderService {
             productRepository.updateProductQuantity(newQuantity, orderItemDTO.getId().getProductId());
         });
         Order order = modelMapper.map(orderDTO, Order.class);
-        shoppingCart.stream().forEach(cartItem -> {
-            order.getItems().add(
-                    new OrderItems(cartItem.getQuantity(), cartItem.getProduct().getDiscount() * cartItem.getProduct().getPrice(), cartItem.getProduct(), order)
-            );
-        });
+        shoppingCart.stream().forEach(cartItem ->
+                order.getItems().add(
+                        new OrderItems(cartItem.getQuantity(), cartItem.getProduct().getDiscount() * cartItem.getProduct().getPrice(), cartItem.getProduct(), order)
+                ));
         order.setCustomer(customer);
         order.setStatus(OrderStatus.COMPLETED);
         Order orderAfterSaved = orderRepository.save(order);
@@ -71,8 +72,9 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public List<OrderDTO> getOrderForSpecificUser(Long userId) {
         Set<Order> orderSet = orderRepository.getOrderByUserId(userId);
-        List<OrderDTO> orderDTOS = orderSet.stream().map(order -> modelMapper.map(order, OrderDTO.class)).collect(Collectors.toList());
-        return orderDTOS;
+        return orderSet.stream()
+                .map(order -> modelMapper.map(order, OrderDTO.class))
+                .collect(Collectors.toList());
     }
 
 

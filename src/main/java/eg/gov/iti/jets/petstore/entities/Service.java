@@ -1,13 +1,12 @@
 package eg.gov.iti.jets.petstore.entities;
 
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
 import javax.persistence.*;
 import java.time.Duration;
 import java.time.LocalTime;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -24,8 +23,12 @@ public class Service {
     private LocalTime endTime;
     private Duration timePerService;
     private Boolean deliverable;
-    @OneToOne(optional = false)
+    @Column(name = "IMAGE_URL", nullable = false)
+    private String imageUrl;
+    @ManyToOne(optional = false)
     private ServiceProvider provider;
     @ManyToOne(optional = false)
     private ServiceType type;
+    @OneToMany(mappedBy = "service", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<ServiceRate> rates;
 }

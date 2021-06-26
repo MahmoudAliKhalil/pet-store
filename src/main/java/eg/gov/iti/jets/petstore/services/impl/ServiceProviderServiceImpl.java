@@ -2,6 +2,7 @@ package eg.gov.iti.jets.petstore.services.impl;
 
 import eg.gov.iti.jets.petstore.dto.ServiceDTO;
 import eg.gov.iti.jets.petstore.dto.ServiceProviderDTO;
+import eg.gov.iti.jets.petstore.dto.ServicesDTO;
 import eg.gov.iti.jets.petstore.entities.ServiceProvider;
 import eg.gov.iti.jets.petstore.exceptions.ResourceBadRequestException;
 import eg.gov.iti.jets.petstore.exceptions.ResourceNotFoundException;
@@ -9,11 +10,11 @@ import eg.gov.iti.jets.petstore.repositories.ServiceProviderRepository;
 import eg.gov.iti.jets.petstore.services.ServiceProviderService;
 import org.modelmapper.ModelMapper;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -49,9 +50,12 @@ public class ServiceProviderServiceImpl implements ServiceProviderService {
 
     @Override
     public ServiceProviderDTO updateServiceProvider(Long id, ServiceProviderDTO serviceProvider) {
-        serviceProviderRepository.findById(id).orElseThrow(()->new ResourceNotFoundException("ServiceProvider with id: " + id + " not found."));
-        serviceProvider.setId(id);
-        return modelMapper.map(serviceProviderRepository.save(modelMapper.map(serviceProvider, ServiceProvider.class)), ServiceProviderDTO.class);
+        if (serviceProviderRepository.existsById(id)) {
+            serviceProvider.setId(id);
+            return modelMapper.map(serviceProviderRepository.save(modelMapper.map(serviceProvider, ServiceProvider.class)), ServiceProviderDTO.class);
+        } else {
+            throw new ResourceNotFoundException("ServiceProvider with id: " + id + " not found.");
+        }
     }
 
     @Override
@@ -65,12 +69,22 @@ public class ServiceProviderServiceImpl implements ServiceProviderService {
     }
 
     @Override
-    public void deleteAllServiceProviders() { serviceProviderRepository.deleteAllInBatch(); }
+    public void deleteAllServiceProviders() {
+        serviceProviderRepository.deleteAllInBatch();
+    }
 
     @Override
-    public ServiceDTO getProviderService(Long id) {
-        return serviceProviderRepository.findById(id)
-                .map(e->modelMapper.map(e.getService(),ServiceDTO.class))
-                .orElseThrow(()->new ResourceNotFoundException("ServiceProvider with id: " + id + " not found."));
+    public ServicesDTO getProviderServices(Long id, Integer page, Integer pageLimit) {
+        if(serviceProviderRepository.existsById(id)) {
+            Page<eg.gov.iti.jets.petstore.entities.Service> providerServices = serviceProviderRepository.getProviderServices(id, Pageable.ofSize(pageLimit).withPage(page));
+            return ServicesDTO.builder()
+                    .count(providerServices.getTotalElements())
+                    .services(providerServices
+                            .map(service -> modelMapper.map(service, ServiceDTO.class))
+                            .getContent())
+                    .build();
+        } else {
+            throw new ResourceNotFoundException("ServiceProvider with id: " + id + " not found.");
+        }
     }
 }

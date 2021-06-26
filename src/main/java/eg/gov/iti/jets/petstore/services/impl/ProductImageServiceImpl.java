@@ -46,7 +46,7 @@ public class ProductImageServiceImpl implements ProductImageService {
         this.modelMapper = modelMapper;
         this.amazonS3 = amazonS3;
     }
-    
+
     // @Async annotation ensures that the method is executed in a different background thread
     // but not consume the main thread.
     @Async
@@ -94,7 +94,7 @@ public class ProductImageServiceImpl implements ProductImageService {
             final String imageUrl = (amazonS3.getUrl(bucketName, imagePath).toString());
 
             //delete file info from database
-            return productImageRepository.deleteProductImageByUrl(imageUrl) > 0 ? true : false;
+            return productImageRepository.deleteProductImageByUrl(imageUrl) > 0;
         } catch (AmazonServiceException ase) {
             logAmazonServiceException(ase);
         } catch (AmazonClientException ace) {
@@ -113,11 +113,10 @@ public class ProductImageServiceImpl implements ProductImageService {
         List<ProductImage> imagesToBeDeleted = productImageRepository.findByProductId(id);
         List<String> imageKeys = new ArrayList<>();
 
-        imagesToBeDeleted.forEach(image -> {
-            imageKeys.add(image.getProduct().getCategory().getName() + '/' +
-                    image.getProduct().getName() + '/' +
-                    image.getName());
-        });
+        imagesToBeDeleted.forEach(image ->
+                imageKeys.add(image.getProduct().getCategory().getName() + '/' +
+                        image.getProduct().getName() + '/' +
+                        image.getName()));
 
         try {
             DeleteObjectsRequest deleteObjectsRequest = new DeleteObjectsRequest(bucketName)

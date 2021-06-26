@@ -4,7 +4,6 @@ package eg.gov.iti.jets.petstore.services.impl;
 import eg.gov.iti.jets.petstore.dto.CustomerDTO;
 import eg.gov.iti.jets.petstore.dto.OrderDTO;
 import eg.gov.iti.jets.petstore.entities.Customer;
-import eg.gov.iti.jets.petstore.entities.Order;
 import eg.gov.iti.jets.petstore.exceptions.ResourceNotFoundException;
 import eg.gov.iti.jets.petstore.repositories.CustomerRepository;
 import eg.gov.iti.jets.petstore.security.model.CustomUserDetails;
@@ -72,10 +71,10 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public List<OrderDTO> getCustomerOrders(Long id) {
         return customerRepository.findById(id)
-                .orElseThrow(()->new ResourceNotFoundException("Customer with id: " + id + " not found."))
+                .orElseThrow(() -> new ResourceNotFoundException("Customer with id: " + id + " not found."))
                 .getOrders()
                 .stream()
-                .map(e->modelMapper.map(e, OrderDTO.class))
+                .map(e -> modelMapper.map(e, OrderDTO.class))
                 .collect(Collectors.toList());
     }
 
