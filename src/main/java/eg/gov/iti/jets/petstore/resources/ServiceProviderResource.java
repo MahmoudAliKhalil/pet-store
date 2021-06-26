@@ -1,6 +1,7 @@
 package eg.gov.iti.jets.petstore.resources;
 
 import eg.gov.iti.jets.petstore.dto.ServiceProviderDTO;
+import eg.gov.iti.jets.petstore.dto.ServiceProvidersDTO;
 import eg.gov.iti.jets.petstore.dto.ServicesDTO;
 import eg.gov.iti.jets.petstore.exceptions.models.ErrorDetails;
 import eg.gov.iti.jets.petstore.services.ServiceProviderService;
@@ -31,10 +32,10 @@ public class ServiceProviderResource {
     @ApiResponse(responseCode = "204", description = "Empty list of serviceProvider accounts.", content = @Content)
     @ApiResponse(responseCode = "200", description = "Successfully retrieve serviceProvider accounts.")
     @GetMapping
-    public ResponseEntity<List<ServiceProviderDTO>> getServiceProviders(@Parameter(description = "Number of pages to retrieve.", example = "0") @RequestParam(name = "page", defaultValue = "0") Integer page,
+    public ResponseEntity<ServiceProvidersDTO> getServiceProviders(@Parameter(description = "Number of pages to retrieve.", example = "0") @RequestParam(name = "page", defaultValue = "0") Integer page,
                                                                         @Parameter(description = "Number of accounts in the page.", example = "10") @RequestParam(name = "pageLimit", defaultValue = "10") Integer pageLimit) {
-        List<ServiceProviderDTO> serviceProviders = serviceProviderService.getAllServiceProviders(page, pageLimit);
-        HttpStatus httpStatus = serviceProviders.isEmpty() ? HttpStatus.NO_CONTENT : HttpStatus.OK;
+        ServiceProvidersDTO serviceProviders = serviceProviderService.getAllServiceProviders(page, pageLimit);
+        HttpStatus httpStatus = serviceProviders.getCount() <= 0 ? HttpStatus.NO_CONTENT : HttpStatus.OK;
         return ResponseEntity.status(httpStatus).body(serviceProviders);
     }
 

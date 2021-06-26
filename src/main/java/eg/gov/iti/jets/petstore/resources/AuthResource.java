@@ -98,7 +98,6 @@ public class AuthResource {
      */
     @PostMapping("google")
     public ResponseEntity<AuthenticationResponse> loginWithGoogle(@RequestBody TokenDTO idToken) throws IOException {
-        System.out.println(idToken);
         NetHttpTransport httpTransport = new NetHttpTransport();
         JacksonFactory jacksonFactory = JacksonFactory.getDefaultInstance();
         GoogleIdTokenVerifier.Builder builder = new GoogleIdTokenVerifier
@@ -107,16 +106,13 @@ public class AuthResource {
         GoogleIdToken googleIdToken = GoogleIdToken.parse(builder.getJsonFactory(),
                 idToken.getToken());
         GoogleIdToken.Payload payload = googleIdToken.getPayload();
-        System.out.println("Google payload" + payload);
 
         String email = payload.getEmail();
-        Boolean exist = authService.isUserEmailExist(email);
+        boolean exist = authService.isUserEmailExist(email);
         CustomUserDetails userDetails= null;
         if(exist){
-            System.out.println("User Exist");
             userDetails = (CustomUserDetails) authService.loadUserByUsername(email);
         }else{
-            System.out.println("User Not Exist");
             userDetails = authService.addNewUser(email);
         }
         String token = jwtUtil.generateToken(userDetails, userDetails.getId());
@@ -132,20 +128,18 @@ public class AuthResource {
      * @throws IOException
      */
     @PostMapping("facebook")
-    public ResponseEntity<AuthenticationResponse> loginWithFacebook(@RequestBody TokenDTO authToken) throws IOException {
+    public ResponseEntity<AuthenticationResponse> loginWithFacebook(@RequestBody TokenDTO authToken) {
 
         FacebookTemplate facebookTemplate = new FacebookTemplate(authToken.getToken());
         String[] userInformation= {"email", "name", "picture"};
         org.springframework.social.facebook.api.User user = facebookTemplate.fetchObject("me", org.springframework.social.facebook.api.User.class, userInformation);
 
         String userFacebook = user.getEmail();
-        Boolean exist = authService.isUserEmailExist(userFacebook);
+        boolean exist = authService.isUserEmailExist(userFacebook);
         CustomUserDetails userDetails= null;
         if(exist){
-            System.out.println("User Exist");
             userDetails = (CustomUserDetails) authService.loadUserByUsername(userFacebook);
         }else{
-            System.out.println("User Not Exist");
             userDetails = authService.addNewUser(userFacebook);
         }
         String token = jwtUtil.generateToken(userDetails, userDetails.getId());

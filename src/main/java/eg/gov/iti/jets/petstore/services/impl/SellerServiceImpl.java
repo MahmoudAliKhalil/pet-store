@@ -3,6 +3,7 @@ package eg.gov.iti.jets.petstore.services.impl;
 import eg.gov.iti.jets.petstore.dto.ProductDTO;
 import eg.gov.iti.jets.petstore.dto.ProductsDTO;
 import eg.gov.iti.jets.petstore.dto.SellerDTO;
+import eg.gov.iti.jets.petstore.dto.SellersDTO;
 import eg.gov.iti.jets.petstore.entities.Product;
 import eg.gov.iti.jets.petstore.entities.Seller;
 import eg.gov.iti.jets.petstore.exceptions.ResourceNotFoundException;
@@ -14,7 +15,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -28,11 +28,14 @@ public class SellerServiceImpl implements SellerService {
     }
 
     @Override
-    public List<SellerDTO> getAllSellers(Integer page, Integer pageLimit) {
-        return sellerRepository.findAll(Pageable.ofSize(pageLimit).withPage(page))
-                .stream()
-                .map(e -> modelMapper.map(e, SellerDTO.class))
-                .collect(Collectors.toList());
+    public SellersDTO getAllSellers(Integer page, Integer pageLimit) {
+        Page<Seller> sellers = sellerRepository.findAll(Pageable.ofSize(pageLimit).withPage(page));
+        return SellersDTO.builder()
+                .count(sellers.getTotalElements())
+                .sellers(sellers
+                        .map(e -> modelMapper.map(e, SellerDTO.class))
+                        .getContent())
+                .build();
     }
 
     @Override

@@ -2,11 +2,12 @@ package eg.gov.iti.jets.petstore.services;
 
 import eg.gov.iti.jets.petstore.dto.ProductsDTO;
 import eg.gov.iti.jets.petstore.dto.SellerDTO;
+import eg.gov.iti.jets.petstore.dto.SellersDTO;
 
 import java.util.List;
 
 public interface SellerService {
-    List<SellerDTO> getAllSellers(Integer page, Integer pageLimit);
+    SellersDTO getAllSellers(Integer page, Integer pageLimit);
 
     SellerDTO getSeller(Long id);
 

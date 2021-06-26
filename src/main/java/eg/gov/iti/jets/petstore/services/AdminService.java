@@ -1,11 +1,10 @@
 package eg.gov.iti.jets.petstore.services;
 
 import eg.gov.iti.jets.petstore.dto.AdminDTO;
-
-import java.util.List;
+import eg.gov.iti.jets.petstore.dto.AdminsDTO;
 
 public interface AdminService {
-    List<AdminDTO> getAllAdmins(Integer page, Integer pageLimit);
+    AdminsDTO getAllAdmins(Integer page, Integer pageLimit);
 
     AdminDTO getAdmin(Long id);
 

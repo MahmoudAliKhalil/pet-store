@@ -1,13 +1,13 @@
 package eg.gov.iti.jets.petstore.services;
 
 import eg.gov.iti.jets.petstore.dto.CustomerDTO;
+import eg.gov.iti.jets.petstore.dto.CustomersDTO;
 import eg.gov.iti.jets.petstore.dto.OrderDTO;
-import eg.gov.iti.jets.petstore.security.model.CustomUserDetails;
 
 import java.util.List;
 
 public interface CustomerService {
-    List<CustomerDTO> getAllCustomers(Integer page, Integer pageLimit);
+    CustomersDTO getAllCustomers(Integer page, Integer pageLimit);
 
     CustomerDTO getCustomer(Long id);
 

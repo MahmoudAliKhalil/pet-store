@@ -1,6 +1,7 @@
 package eg.gov.iti.jets.petstore.resources;
 
 import eg.gov.iti.jets.petstore.dto.CustomerDTO;
+import eg.gov.iti.jets.petstore.dto.CustomersDTO;
 import eg.gov.iti.jets.petstore.dto.OrderDTO;
 import eg.gov.iti.jets.petstore.exceptions.models.ErrorDetails;
 import eg.gov.iti.jets.petstore.services.CustomerService;
@@ -32,10 +33,10 @@ public class CustomerResource {
     @ApiResponse(responseCode = "204", description = "Empty list of customer accounts.", content = @Content)
     @ApiResponse(responseCode = "200", description = "Successfully retrieve customer accounts.")
     @GetMapping
-    public ResponseEntity<List<CustomerDTO>> getCustomers(@Parameter(description = "Number of pages to retrieve.", example = "0") @RequestParam(name = "page", defaultValue = "0") Integer page,
-                                                        @Parameter(description = "Number of accounts in the page.", example = "10") @RequestParam(name = "pageLimit", defaultValue = "10") Integer pageLimit) {
-        List<CustomerDTO> customers = customerService.getAllCustomers(page, pageLimit);
-        HttpStatus httpStatus = customers.isEmpty() ? HttpStatus.NO_CONTENT : HttpStatus.OK;
+    public ResponseEntity<CustomersDTO> getCustomers(@Parameter(description = "Number of pages to retrieve.", example = "0") @RequestParam(name = "page", defaultValue = "0") Integer page,
+                                                          @Parameter(description = "Number of accounts in the page.", example = "10") @RequestParam(name = "pageLimit", defaultValue = "10") Integer pageLimit) {
+        CustomersDTO customers = customerService.getAllCustomers(page, pageLimit);
+        HttpStatus httpStatus = customers.getCount() <= 0 ? HttpStatus.NO_CONTENT : HttpStatus.OK;
         return ResponseEntity.status(httpStatus).body(customers);
     }
 
@@ -57,7 +58,7 @@ public class CustomerResource {
     @GetMapping("{id}/orders")
     public ResponseEntity<List<OrderDTO>> getCustomerOrder(@Parameter(description = "Customer account unique identifier.", example = "123", required = true) @PathVariable("id") Long id) {
         List<OrderDTO> orders = customerService.getCustomerOrders(id);
-        HttpStatus status = orders.isEmpty()?HttpStatus.NO_CONTENT:HttpStatus.OK;
+        HttpStatus status = orders.isEmpty() ? HttpStatus.NO_CONTENT : HttpStatus.OK;
         return ResponseEntity.status(status).body(orders);
     }
 
@@ -88,7 +89,7 @@ public class CustomerResource {
     @PutMapping("{id}")
     @ResponseStatus(HttpStatus.OK)
     public CustomerDTO updateCustomer(@Parameter(description = "customer account unique identifier.", example = "123", required = true) @PathVariable("id") Long id,
-                                  @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "customer account information.", required = true) @RequestBody CustomerDTO customer) {
+                                      @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "customer account information.", required = true) @RequestBody CustomerDTO customer) {
         return customerService.updateCustomer(id, customer);
     }
 

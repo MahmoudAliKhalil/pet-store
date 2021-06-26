@@ -1,12 +1,13 @@
 package eg.gov.iti.jets.petstore.services;
 
 import eg.gov.iti.jets.petstore.dto.ServiceProviderDTO;
+import eg.gov.iti.jets.petstore.dto.ServiceProvidersDTO;
 import eg.gov.iti.jets.petstore.dto.ServicesDTO;
 
 import java.util.List;
 
 public interface ServiceProviderService {
-    List<ServiceProviderDTO> getAllServiceProviders(Integer page, Integer pageLimit);
+    ServiceProvidersDTO getAllServiceProviders(Integer page, Integer pageLimit);
 
     ServiceProviderDTO getServiceProvider(Long id);
 

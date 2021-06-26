@@ -2,6 +2,7 @@ package eg.gov.iti.jets.petstore.services.impl;
 
 import eg.gov.iti.jets.petstore.dto.ServiceDTO;
 import eg.gov.iti.jets.petstore.dto.ServiceProviderDTO;
+import eg.gov.iti.jets.petstore.dto.ServiceProvidersDTO;
 import eg.gov.iti.jets.petstore.dto.ServicesDTO;
 import eg.gov.iti.jets.petstore.entities.ServiceProvider;
 import eg.gov.iti.jets.petstore.exceptions.ResourceBadRequestException;
@@ -13,9 +14,6 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class ServiceProviderServiceImpl implements ServiceProviderService {
@@ -29,11 +27,14 @@ public class ServiceProviderServiceImpl implements ServiceProviderService {
 
 
     @Override
-    public List<ServiceProviderDTO> getAllServiceProviders(Integer page, Integer pageLimit) {
-        return serviceProviderRepository.findAll(Pageable.ofSize(pageLimit).withPage(page))
-                .stream()
-                .map(e -> modelMapper.map(e, ServiceProviderDTO.class))
-                .collect(Collectors.toList());
+    public ServiceProvidersDTO getAllServiceProviders(Integer page, Integer pageLimit) {
+        Page<ServiceProvider> providers = serviceProviderRepository.findAll(Pageable.ofSize(pageLimit).withPage(page));
+        return ServiceProvidersDTO.builder()
+                .count(providers.getTotalElements())
+                .providers(providers
+                        .map(e -> modelMapper.map(e, ServiceProviderDTO.class))
+                        .getContent())
+                .build();
     }
 
     @Override
@@ -75,7 +76,7 @@ public class ServiceProviderServiceImpl implements ServiceProviderService {
 
     @Override
     public ServicesDTO getProviderServices(Long id, Integer page, Integer pageLimit) {
-        if(serviceProviderRepository.existsById(id)) {
+        if (serviceProviderRepository.existsById(id)) {
             Page<eg.gov.iti.jets.petstore.entities.Service> providerServices = serviceProviderRepository.getProviderServices(id, Pageable.ofSize(pageLimit).withPage(page));
             return ServicesDTO.builder()
                     .count(providerServices.getTotalElements())
