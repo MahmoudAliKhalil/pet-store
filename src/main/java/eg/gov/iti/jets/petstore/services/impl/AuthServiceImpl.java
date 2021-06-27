@@ -4,7 +4,7 @@ import eg.gov.iti.jets.petstore.dto.UserLoginDTO;
 import eg.gov.iti.jets.petstore.dto.UserRegistrationDTO;
 import eg.gov.iti.jets.petstore.entities.User;
 import eg.gov.iti.jets.petstore.enums.Roles;
-import eg.gov.iti.jets.petstore.repositories.UserRepository;
+import eg.gov.iti.jets.petstore.repositories.*;
 import eg.gov.iti.jets.petstore.security.model.CustomUserDetails;
 import eg.gov.iti.jets.petstore.services.AuthService;
 import org.modelmapper.ModelMapper;
@@ -13,9 +13,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.HashSet;
-import java.util.Set;
 
 @Service
 public class AuthServiceImpl implements AuthService {
@@ -26,10 +23,12 @@ public class AuthServiceImpl implements AuthService {
     private final ModelMapper modelMapper;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    public AuthServiceImpl(UserRepository userRepository, ModelMapper modelMapper, BCryptPasswordEncoder bCryptPasswordEncoder) {
+
+    public AuthServiceImpl(UserRepository userRepository, ModelMapper modelMapper, BCryptPasswordEncoder bCryptPasswordEncoder ) {
         this.userRepository = userRepository;
         this.modelMapper = modelMapper;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+
     }
 
     @Override

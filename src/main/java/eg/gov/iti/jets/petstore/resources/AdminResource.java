@@ -1,6 +1,7 @@
 package eg.gov.iti.jets.petstore.resources;
 
 import eg.gov.iti.jets.petstore.dto.AdminDTO;
+import eg.gov.iti.jets.petstore.dto.UserRegistrationDTO;
 import eg.gov.iti.jets.petstore.dto.AdminsDTO;
 import eg.gov.iti.jets.petstore.exceptions.models.ErrorDetails;
 import eg.gov.iti.jets.petstore.services.AdminService;
@@ -85,5 +86,16 @@ public class AdminResource {
     @ResponseStatus(HttpStatus.OK)
     public void deleteAdmins(@Parameter(description = "Admin account unique identifier.", example = "123", required = true) @PathVariable("id") Long id) {
         adminService.deleteAdmin(id);
+    }
+
+    @Operation(summary = "SignUp Admin",
+            description = "provide User information to SignUp"
+    )
+    @ApiResponse(responseCode = "201", description = "Successfully SignUp.")
+    @ApiResponse(responseCode = "400", description = "Bad request, you must provide all the fields", content = @Content)
+    @PostMapping("signUp")
+    public ResponseEntity<HttpStatus> signUp ( @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "User Information ToSign Up", required = true) @RequestBody UserRegistrationDTO userRegistrationDTO){
+        adminService.signUp(userRegistrationDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 }

@@ -3,6 +3,7 @@ package eg.gov.iti.jets.petstore.services.impl;
 import eg.gov.iti.jets.petstore.dto.ProductDTO;
 import eg.gov.iti.jets.petstore.dto.ProductsDTO;
 import eg.gov.iti.jets.petstore.dto.SellerDTO;
+import eg.gov.iti.jets.petstore.dto.UserRegistrationDTO;
 import eg.gov.iti.jets.petstore.dto.SellersDTO;
 import eg.gov.iti.jets.petstore.entities.Product;
 import eg.gov.iti.jets.petstore.entities.Seller;
@@ -13,6 +14,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.stream.Collectors;
@@ -21,10 +23,12 @@ import java.util.stream.Collectors;
 public class SellerServiceImpl implements SellerService {
     private final SellerRepository sellerRepository;
     private final ModelMapper modelMapper;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    public SellerServiceImpl(SellerRepository sellerRepository, ModelMapper modelMapper) {
+    public SellerServiceImpl(SellerRepository sellerRepository, ModelMapper modelMapper, BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.sellerRepository = sellerRepository;
         this.modelMapper = modelMapper;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
     @Override
@@ -87,5 +91,14 @@ public class SellerServiceImpl implements SellerService {
         } else {
             throw new ResourceNotFoundException("Seller with id: " + id + " not found.");
         }
+    }
+
+    @Override
+    public void signUp(UserRegistrationDTO userRegistrationDTO) {
+        userRegistrationDTO.setPassword(bCryptPasswordEncoder.encode(userRegistrationDTO.getPassword()));
+        Seller seller = modelMapper.map(userRegistrationDTO, Seller.class);
+        seller.setActive(true);
+        seller.setNotLocked(true);
+        sellerRepository.save(seller);
     }
 }

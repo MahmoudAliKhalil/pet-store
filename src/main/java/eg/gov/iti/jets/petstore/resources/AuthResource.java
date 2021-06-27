@@ -1,10 +1,9 @@
 package eg.gov.iti.jets.petstore.resources;
 
-import eg.gov.iti.jets.petstore.dto.AuthenticationResponse;
-import eg.gov.iti.jets.petstore.dto.TokenDTO;
-import eg.gov.iti.jets.petstore.dto.UserLoginDTO;
-import eg.gov.iti.jets.petstore.dto.UserRegistrationDTO;
+import eg.gov.iti.jets.petstore.dto.*;
 import eg.gov.iti.jets.petstore.entities.User;
+import eg.gov.iti.jets.petstore.exceptions.ResourceNotFoundException;
+import eg.gov.iti.jets.petstore.exceptions.UserNotFoundException;
 import eg.gov.iti.jets.petstore.exceptions.models.ErrorDetails;
 import eg.gov.iti.jets.petstore.security.JwtUtil;
 import eg.gov.iti.jets.petstore.security.model.CustomUserDetails;
@@ -21,10 +20,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.social.facebook.api.impl.FacebookTemplate;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
 import com.google.api.client.http.javanet.NetHttpTransport;
@@ -59,7 +55,7 @@ public class AuthResource {
     @ApiResponse(responseCode = "500", description = "Internal Server Error")
     @ApiResponse(responseCode = "400", description = "Bad request, you must provide all the fields", content = @Content)
     @PostMapping("signUp")
-    public ResponseEntity<UserRegistrationDTO> signUp ( @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "User Information ToSign Up", required = true) @RequestBody UserRegistrationDTO userRegistrationDTO){
+    public ResponseEntity<UserRegistrationDTO> signUp(@io.swagger.v3.oas.annotations.parameters.RequestBody(description = "User Information ToSign Up", required = true) @RequestBody UserRegistrationDTO userRegistrationDTO) {
         UserRegistrationDTO userInformation = authService.signUp(userRegistrationDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(userInformation);
     }
@@ -71,13 +67,13 @@ public class AuthResource {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(userLoginDTO.getEmail()
                             , userLoginDTO.getPassword(), Collections.emptyList()));
-        }catch (BadCredentialsException exception){
-            throw new Exception("Incorrect UserName or Password " + exception);
+        } catch (BadCredentialsException exception) {
+            throw new UserNotFoundException("Incorrect UserName or Password");
         }
-        final UserDetails userDetails =authService.loadUserByUsername(userLoginDTO.getEmail());
+        final UserDetails userDetails = authService.loadUserByUsername(userLoginDTO.getEmail());
         Long userId = ((User) userDetails).getId();
         String token = jwtUtil.generateToken(userDetails, userId);
-        return ResponseEntity.ok(new AuthenticationResponse(token,userId));
+        return ResponseEntity.ok(new AuthenticationResponse(token, userId));
     }
 
 //    @PostMapping(value = "/refresh")
@@ -88,10 +84,7 @@ public class AuthResource {
 //    }
 
 
-
-
     /**
-     *
      * @param idToken it's a idToken not authToken from google response in angular
      * @return GoogleIdToken.Payload
      * @throws IOException
@@ -108,21 +101,21 @@ public class AuthResource {
         GoogleIdToken.Payload payload = googleIdToken.getPayload();
 
         String email = payload.getEmail();
+
         boolean exist = authService.isUserEmailExist(email);
-        CustomUserDetails userDetails= null;
-        if(exist){
+        CustomUserDetails userDetails = null;
+        if (exist) {
             userDetails = (CustomUserDetails) authService.loadUserByUsername(email);
-        }else{
+        } else {
             userDetails = authService.addNewUser(email);
         }
         String token = jwtUtil.generateToken(userDetails, userDetails.getId());
-        return ResponseEntity.ok(new AuthenticationResponse(token,userDetails.getId()));
+        return ResponseEntity.ok(new AuthenticationResponse(token, userDetails.getId()));
 
     }
 
 
     /**
-     *
      * @param authToken from facebook response in angular
      * @return User
      * @throws IOException
@@ -131,21 +124,30 @@ public class AuthResource {
     public ResponseEntity<AuthenticationResponse> loginWithFacebook(@RequestBody TokenDTO authToken) {
 
         FacebookTemplate facebookTemplate = new FacebookTemplate(authToken.getToken());
-        String[] userInformation= {"email", "name", "picture"};
+        String[] userInformation = {"email", "name", "picture"};
         org.springframework.social.facebook.api.User user = facebookTemplate.fetchObject("me", org.springframework.social.facebook.api.User.class, userInformation);
 
         String userFacebook = user.getEmail();
         boolean exist = authService.isUserEmailExist(userFacebook);
-        CustomUserDetails userDetails= null;
-        if(exist){
+        CustomUserDetails userDetails = null;
+        if (exist) {
             userDetails = (CustomUserDetails) authService.loadUserByUsername(userFacebook);
-        }else{
+        } else {
             userDetails = authService.addNewUser(userFacebook);
         }
         String token = jwtUtil.generateToken(userDetails, userDetails.getId());
-        return ResponseEntity.ok(new AuthenticationResponse(token,userDetails.getId()));
+        return ResponseEntity.ok(new AuthenticationResponse(token, userDetails.getId()));
     }
 
 
+    @PostMapping("/email")
+    public ResponseEntity<?> checkEmailExistOrNot(@RequestBody UserEmailDTO emailDTO) {
+        Boolean userEmailExist = authService.isUserEmailExist(emailDTO.getEmail());
+        if (userEmailExist) {
+            return ResponseEntity.status(HttpStatus.OK).body(true);
+        } else {
+            throw new ResourceNotFoundException("This Email already Exist");
+        }
 
+    }
 }

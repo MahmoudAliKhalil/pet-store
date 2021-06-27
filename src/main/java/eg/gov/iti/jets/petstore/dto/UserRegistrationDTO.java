@@ -1,6 +1,6 @@
 package eg.gov.iti.jets.petstore.dto;
 
-import eg.gov.iti.jets.petstore.entities.Address;
+
 import eg.gov.iti.jets.petstore.enums.Gender;
 import eg.gov.iti.jets.petstore.enums.Roles;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -15,9 +15,10 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Schema(description = "Details about User Registration Data")
 public class UserRegistrationDTO {
-    @Schema(description = "User first Name", example = "foo")
+
+    @Schema(description = "User's First Name", example = "foo")
     private String firstName;
-    @Schema(description = "User last Name", example = "foo")
+    @Schema(description = "User's last Name", example = "foo")
     private String lastName;
     @Schema(description = "User's email address", example = "foo@example.com")
     private String email;
