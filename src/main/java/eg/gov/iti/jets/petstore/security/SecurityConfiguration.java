@@ -4,6 +4,7 @@ package eg.gov.iti.jets.petstore.security;
 import eg.gov.iti.jets.petstore.services.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -44,7 +45,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers("/admins/**").hasRole("ADMIN")
-                .antMatchers("/sellers/**").hasAnyRole("SELLER", "ADMIN")
+                .antMatchers("/sellers/signUp").permitAll()
+                .antMatchers("/serviceproviders/signUp").permitAll()
+                .antMatchers("/sellers/**").hasAnyAuthority("ROLE_SELLER", "ROLE_ADMIN")
                 .antMatchers("/serviceproviders/**").hasAnyRole("SERVICE_PROVIDER", "ADMIN")
                 .antMatchers("/auth/**")
                 .permitAll()

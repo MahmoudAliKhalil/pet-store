@@ -2,6 +2,7 @@ package eg.gov.iti.jets.petstore.services.impl;
 
 import eg.gov.iti.jets.petstore.dto.UserLoginDTO;
 import eg.gov.iti.jets.petstore.dto.UserRegistrationDTO;
+import eg.gov.iti.jets.petstore.entities.Customer;
 import eg.gov.iti.jets.petstore.entities.User;
 import eg.gov.iti.jets.petstore.enums.Roles;
 import eg.gov.iti.jets.petstore.repositories.*;
@@ -59,14 +60,14 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public CustomUserDetails addNewUser(String email) {
-        User user = new User();
-        user.setEmail(email);
-        user.setPassword(bCryptPasswordEncoder.encode(password));
-        user.setRole(Roles.ROLE_CUSTOMER);
-        user.setActive(true);
-        user.setNotLocked(true);
+        Customer customer = new Customer();
+        customer.setEmail(email);
+        customer.setPassword(bCryptPasswordEncoder.encode(password));
+        customer.setRole(Roles.ROLE_CUSTOMER);
+        customer.setActive(true);
+        customer.setNotLocked(true);
 
-        User newUser = userRepository.save(user);
+        User newUser = userRepository.save(customer);
         return new CustomUserDetails(newUser);
     }
 }

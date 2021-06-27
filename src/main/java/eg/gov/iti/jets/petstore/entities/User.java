@@ -16,9 +16,9 @@ import java.util.Set;
 @Data
 @Inheritance
 @DiscriminatorColumn(name = "role")
-@DiscriminatorValue("ROLE_USER")
+//@DiscriminatorValue("ROLE_USER")
 @NoArgsConstructor
-public class User {
+public abstract class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

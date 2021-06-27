@@ -49,4 +49,14 @@ public class CustomUserDetails extends User implements UserDetails {
     public boolean isEnabled() {
         return super.isActive();
     }
+
+
+    public String getFirsName() {
+        return super.getFirstName();
+    }
+
+
+    public String getLastName() {
+        return super.getLastName();
+    }
 }
