@@ -1,6 +1,7 @@
 package eg.gov.iti.jets.petstore.resources;
 
 import eg.gov.iti.jets.petstore.dto.ServiceProviderDTO;
+import eg.gov.iti.jets.petstore.dto.UserRegistrationDTO;
 import eg.gov.iti.jets.petstore.dto.ServiceProvidersDTO;
 import eg.gov.iti.jets.petstore.dto.ServicesDTO;
 import eg.gov.iti.jets.petstore.exceptions.models.ErrorDetails;
@@ -103,4 +104,18 @@ public class ServiceProviderResource {
     public void deleteServiceProviders(@Parameter(description = "ServiceProvider account unique identifier.", example = "123", required = true) @PathVariable("id") Long id) {
         serviceProviderService.deleteServiceProvider(id);
     }
+
+    @Operation(summary = "SignUp Service Provider",
+            description = "provide User information to SignUp"
+    )
+    @ApiResponse(responseCode = "201", description = "Successfully SignUp.")
+    @ApiResponse(responseCode = "400", description = "Bad request, you must provide all the fields", content = @Content)
+    @PostMapping("signUp")
+    public ResponseEntity<HttpStatus> signUp ( @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "User Information ToSign Up", required = true) @RequestBody UserRegistrationDTO userRegistrationDTO){
+        System.out.println("userRegistrationDTO " + userRegistrationDTO);
+        serviceProviderService.signUp(userRegistrationDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+
 }

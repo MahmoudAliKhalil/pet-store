@@ -15,13 +15,27 @@ spring:
       maximum-pool-size: 11
       catalog: petstoreschema
       register-mbeans: true
-
+  mail:
+    host: smtp.gmail.com
+    port: 465
+    username: ebrahim.elmohamed26@gmail.com
+    password: blkcfcvdvuzrbbjn
+    protocol: smtp
+    properties:
+      mail:
+        smtp:
+          auth: true
+          ssl:
+            enable: true
+          starttls:
+            enable: true
 
 
   jpa:
     show-sql: true
     hibernate:
       ddl-auto: update
+    database: MYSQL
 
     properties:
       hibernate:
@@ -40,6 +54,17 @@ google:
    id: 150394644628-b6rfj7tbi4pv0cguooulnsomi7a4p1qv.apps.googleusercontent.com
 secret:
    password: 12345
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    shutdown:
+      enabled: true
+    health:
+      show-details: always
 
 cloud:
   aws:

@@ -2,6 +2,7 @@ package eg.gov.iti.jets.petstore.entities;
 
 import eg.gov.iti.jets.petstore.enums.Gender;
 import eg.gov.iti.jets.petstore.enums.Roles;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

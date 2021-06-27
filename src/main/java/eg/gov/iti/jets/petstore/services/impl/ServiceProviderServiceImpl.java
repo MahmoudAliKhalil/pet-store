@@ -2,6 +2,7 @@ package eg.gov.iti.jets.petstore.services.impl;
 
 import eg.gov.iti.jets.petstore.dto.ServiceDTO;
 import eg.gov.iti.jets.petstore.dto.ServiceProviderDTO;
+import eg.gov.iti.jets.petstore.dto.UserRegistrationDTO;
 import eg.gov.iti.jets.petstore.dto.ServiceProvidersDTO;
 import eg.gov.iti.jets.petstore.dto.ServicesDTO;
 import eg.gov.iti.jets.petstore.entities.ServiceProvider;
@@ -13,16 +14,19 @@ import org.modelmapper.ModelMapper;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ServiceProviderServiceImpl implements ServiceProviderService {
     private final ServiceProviderRepository serviceProviderRepository;
     private final ModelMapper modelMapper;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    public ServiceProviderServiceImpl(ServiceProviderRepository serviceProviderRepository, ModelMapper modelMapper) {
+    public ServiceProviderServiceImpl(ServiceProviderRepository serviceProviderRepository, ModelMapper modelMapper, BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.serviceProviderRepository = serviceProviderRepository;
         this.modelMapper = modelMapper;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
 
@@ -87,5 +91,14 @@ public class ServiceProviderServiceImpl implements ServiceProviderService {
         } else {
             throw new ResourceNotFoundException("ServiceProvider with id: " + id + " not found.");
         }
+    }
+
+    @Override
+    public void signUp(UserRegistrationDTO userRegistrationDTO) {
+        userRegistrationDTO.setPassword(bCryptPasswordEncoder.encode(userRegistrationDTO.getPassword()));
+        ServiceProvider serviceProvider = modelMapper.map(userRegistrationDTO, ServiceProvider.class);
+        serviceProvider.setActive(true);
+        serviceProvider.setNotLocked(true);
+        serviceProviderRepository.save(serviceProvider);
     }
 }

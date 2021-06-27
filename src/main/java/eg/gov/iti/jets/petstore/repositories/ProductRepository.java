@@ -15,8 +15,8 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     @Modifying
     @Transactional
-    @Query("UPDATE Product p set p.quantity =:newQuantity where p.id =:productId")
-    Integer updateProductQuantity(@Param("newQuantity") Integer newQuantity, @Param("productId") Long productId);
+    @Query("UPDATE Product p set p.quantity =:newQuantity where p.id =:id")
+    void updateProductQuantity(@Param("newQuantity") Integer newQuantity, @Param("id") Long id);
 
     Page<Product> findAllByPriceBetweenAndAvailableAndQuantityGreaterThan(Float minPrice, Float maxPrice, Boolean isAvailable, Integer quantity, Pageable pageable);
 
