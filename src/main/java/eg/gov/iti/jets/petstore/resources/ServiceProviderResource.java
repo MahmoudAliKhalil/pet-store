@@ -1,12 +1,9 @@
 package eg.gov.iti.jets.petstore.resources;
 
 import eg.gov.iti.jets.petstore.dto.ServiceProviderDTO;
-
 import eg.gov.iti.jets.petstore.dto.UserRegistrationDTO;
-
 import eg.gov.iti.jets.petstore.dto.ServiceProvidersDTO;
 import eg.gov.iti.jets.petstore.dto.ServicesDTO;
-
 import eg.gov.iti.jets.petstore.exceptions.models.ErrorDetails;
 import eg.gov.iti.jets.petstore.services.ServiceProviderService;
 import io.swagger.v3.oas.annotations.Operation;

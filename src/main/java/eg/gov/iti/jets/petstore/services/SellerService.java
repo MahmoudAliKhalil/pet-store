@@ -2,6 +2,7 @@ package eg.gov.iti.jets.petstore.services;
 
 import eg.gov.iti.jets.petstore.dto.ProductsDTO;
 import eg.gov.iti.jets.petstore.dto.SellerDTO;
+import eg.gov.iti.jets.petstore.dto.SellersDTO;
 
 import eg.gov.iti.jets.petstore.dto.UserRegistrationDTO;
 
@@ -23,10 +24,7 @@ public interface SellerService {
 
     void deleteAllSellers();
 
-
-
     void signUp(UserRegistrationDTO userRegistrationDTO);
 
     ProductsDTO getSellerProducts(Long id, Integer page, Integer pageLimit);
-
 }

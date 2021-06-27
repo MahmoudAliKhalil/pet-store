@@ -32,7 +32,6 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-
     public UserRegistrationDTO signUp(UserRegistrationDTO userRegistrationDTO) {
         userRegistrationDTO.setPassword(bCryptPasswordEncoder.encode(userRegistrationDTO.getPassword()));
         User user = modelMapper.map(userRegistrationDTO, User.class);

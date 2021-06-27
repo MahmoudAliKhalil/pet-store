@@ -6,9 +6,7 @@ import eg.gov.iti.jets.petstore.dto.CustomersDTO;
 import eg.gov.iti.jets.petstore.dto.OrderDTO;
 import eg.gov.iti.jets.petstore.dto.UserRegistrationDTO;
 import eg.gov.iti.jets.petstore.entities.Customer;
-
 import eg.gov.iti.jets.petstore.entities.Seller;
-
 import eg.gov.iti.jets.petstore.exceptions.ResourceNotFoundException;
 import eg.gov.iti.jets.petstore.repositories.CustomerRepository;
 import eg.gov.iti.jets.petstore.services.CustomerService;

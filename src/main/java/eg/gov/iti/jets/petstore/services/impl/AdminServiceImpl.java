@@ -1,11 +1,8 @@
 package eg.gov.iti.jets.petstore.services.impl;
 
 import eg.gov.iti.jets.petstore.dto.AdminDTO;
-
 import eg.gov.iti.jets.petstore.dto.UserRegistrationDTO;
-
 import eg.gov.iti.jets.petstore.dto.AdminsDTO;
-
 import eg.gov.iti.jets.petstore.entities.Admin;
 import eg.gov.iti.jets.petstore.exceptions.ResourceNotFoundException;
 import eg.gov.iti.jets.petstore.repositories.AdminRepository;

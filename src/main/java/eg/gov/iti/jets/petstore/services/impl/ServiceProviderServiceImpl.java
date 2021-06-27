@@ -2,12 +2,9 @@ package eg.gov.iti.jets.petstore.services.impl;
 
 import eg.gov.iti.jets.petstore.dto.ServiceDTO;
 import eg.gov.iti.jets.petstore.dto.ServiceProviderDTO;
-
 import eg.gov.iti.jets.petstore.dto.UserRegistrationDTO;
-
 import eg.gov.iti.jets.petstore.dto.ServiceProvidersDTO;
 import eg.gov.iti.jets.petstore.dto.ServicesDTO;
-
 import eg.gov.iti.jets.petstore.entities.ServiceProvider;
 import eg.gov.iti.jets.petstore.exceptions.ResourceBadRequestException;
 import eg.gov.iti.jets.petstore.exceptions.ResourceNotFoundException;

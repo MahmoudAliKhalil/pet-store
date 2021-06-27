@@ -3,12 +3,9 @@ package eg.gov.iti.jets.petstore.services.impl;
 import eg.gov.iti.jets.petstore.dto.ProductDTO;
 import eg.gov.iti.jets.petstore.dto.ProductsDTO;
 import eg.gov.iti.jets.petstore.dto.SellerDTO;
-
 import eg.gov.iti.jets.petstore.dto.UserRegistrationDTO;
-
 import eg.gov.iti.jets.petstore.dto.SellersDTO;
 import eg.gov.iti.jets.petstore.entities.Product;
-
 import eg.gov.iti.jets.petstore.entities.Seller;
 import eg.gov.iti.jets.petstore.exceptions.ResourceNotFoundException;
 import eg.gov.iti.jets.petstore.repositories.SellerRepository;

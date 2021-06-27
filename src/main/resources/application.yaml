@@ -42,7 +42,6 @@ google:
 secret:
    password: 12345
 
-
 management:
   endpoints:
     web:
@@ -52,7 +51,6 @@ management:
       enabled: true
     health:
       show-details: always
-
 
 cloud:
   aws:
@@ -64,4 +62,3 @@ cloud:
       auto: false
     s3:
       bucket-name: petstore-aws-storage
-
