@@ -168,6 +168,17 @@ public class ProductServiceImpl implements ProductService {
         return new ModelMapper().map(productRepository.save(product), ProductDTO.class);
     }
 
+    @Override
+    public ProductsDTO searchProducts(String query, Integer page, Integer pageLimit) {
+        Page<Product> products = productRepository.findProductsByNameContainsAndAvailableAndQuantityGreaterThan(query, true, 0, Pageable.ofSize(pageLimit).withPage(page));
+        return ProductsDTO.builder()
+                .count(products.getTotalElements())
+                .products(products
+                .map(product -> modelMapper.map(product, ProductDTO.class))
+                .getContent())
+                .build();
+    }
+
     private void logAmazonServiceException(AmazonServiceException ase) {
         logger.error(" The call was transmitted successfully, but Amazon S3 couldn't process \n" +
                 "it, so it returned an error response., rejected reasons: ", ase);

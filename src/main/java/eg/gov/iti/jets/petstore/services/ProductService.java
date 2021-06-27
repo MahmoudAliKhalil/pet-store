@@ -52,4 +52,6 @@ public interface ProductService {
     List<ProductDTO> getTheBestOfferForProducts(Long size);
   
     List<ProductDTO> getTopRatedProducts(Long size);
+
+    ProductsDTO searchProducts(String query, Integer page, Integer pageLimit);
 }
