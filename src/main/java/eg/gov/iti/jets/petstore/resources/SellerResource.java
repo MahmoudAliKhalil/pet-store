@@ -1,8 +1,12 @@
 package eg.gov.iti.jets.petstore.resources;
 
-import eg.gov.iti.jets.petstore.dto.ProductDTO;
+import eg.gov.iti.jets.petstore.dto.ProductsDTO;
 import eg.gov.iti.jets.petstore.dto.SellerDTO;
+
 import eg.gov.iti.jets.petstore.dto.UserRegistrationDTO;
+
+import eg.gov.iti.jets.petstore.dto.SellersDTO;
+
 import eg.gov.iti.jets.petstore.exceptions.models.ErrorDetails;
 import eg.gov.iti.jets.petstore.services.SellerService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -15,10 +19,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequestMapping(path = "sellers", produces = MediaType.APPLICATION_JSON_VALUE)
+@ApiResponse(responseCode = "500", description = "Internal server error.", content = @Content(schema = @Schema(implementation = ErrorDetails.class)))
 public class SellerResource {
     public final SellerService sellerService;
 
@@ -31,10 +34,10 @@ public class SellerResource {
     @ApiResponse(responseCode = "204", description = "Empty list of seller accounts.", content = @Content)
     @ApiResponse(responseCode = "200", description = "Successfully retrieve seller accounts.")
     @GetMapping
-    public ResponseEntity<List<SellerDTO>> getSellers(@Parameter(description = "Number of pages to retrieve.", example = "0") @RequestParam(name = "page", defaultValue = "0") Integer page,
-                                                      @Parameter(description = "Number of accounts in the page.", example = "10") @RequestParam(name = "pageLimit", defaultValue = "10") Integer pageLimit) {
-        List<SellerDTO> sellers = sellerService.getAllSellers(page, pageLimit);
-        HttpStatus httpStatus = sellers.isEmpty() ? HttpStatus.NO_CONTENT : HttpStatus.OK;
+    public ResponseEntity<SellersDTO> getSellers(@Parameter(description = "Number of pages to retrieve.", example = "0") @RequestParam(name = "page", defaultValue = "0") Integer page,
+                                                 @Parameter(description = "Number of accounts in the page.", example = "10") @RequestParam(name = "pageLimit", defaultValue = "10") Integer pageLimit) {
+        SellersDTO sellers = sellerService.getAllSellers(page, pageLimit);
+        HttpStatus httpStatus = sellers.getCount() <= 0 ? HttpStatus.NO_CONTENT : HttpStatus.OK;
         return ResponseEntity.status(httpStatus).body(sellers);
     }
 
@@ -54,9 +57,11 @@ public class SellerResource {
     @ApiResponse(responseCode = "204", description = "Empty list of seller products.", content = @Content)
     @ApiResponse(responseCode = "404", description = "Seller account not found.", content = @Content(schema = @Schema(implementation = ErrorDetails.class)))
     @GetMapping("{id}/products")
-    public ResponseEntity<List<ProductDTO>> getSellerProducts(@Parameter(description = "Seller account unique identifier.", example = "123", required = true) @PathVariable("id") Long id) {
-        List<ProductDTO> sellerProducts = sellerService.getSellerProducts(id);
-        HttpStatus httpStatus = sellerProducts.isEmpty() ? HttpStatus.NO_CONTENT : HttpStatus.OK;
+    public ResponseEntity<ProductsDTO> getSellerProducts(@Parameter(description = "Seller account unique identifier.", example = "123", required = true) @PathVariable("id") Long id,
+                                                         @Parameter(description = "Number of pages to retrieve.", example = "0") @RequestParam(name = "page", defaultValue = "0") Integer page,
+                                                         @Parameter(description = "Number of accounts in the page.", example = "10") @RequestParam(name = "pageLimit", defaultValue = "10") Integer pageLimit) {
+        ProductsDTO sellerProducts = sellerService.getSellerProducts(id, page, pageLimit);
+        HttpStatus httpStatus = sellerProducts.getCount() == 0 ? HttpStatus.NO_CONTENT : HttpStatus.OK;
         return ResponseEntity.status(httpStatus).body(sellerProducts);
     }
 

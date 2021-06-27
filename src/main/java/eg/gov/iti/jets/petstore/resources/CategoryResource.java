@@ -24,6 +24,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 @RestController
 @RequestMapping(path = "/categories", produces = MediaType.APPLICATION_JSON_VALUE)
+@ApiResponse(responseCode = "500", description = "Internal server error.", content = @Content(schema = @Schema(implementation = ErrorDetails.class)))
 public class CategoryResource {
 
     private final CategoryService categoryService;
@@ -59,6 +60,19 @@ public class CategoryResource {
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<CategoryDTO>> getAllCategories() {
         List<CategoryDTO> allCategory = categoryService.getAllCategory();
+        return ResponseEntity.status(HttpStatus.OK).body(allCategory);
+    }
+
+
+    @Operation(summary = "Get The first 3 Categories",
+            description = "Retrieve The first 3 available categories"
+    )
+    @ApiResponse(responseCode = "200", description = "Successfully retrieve The first 3 categories.")
+    @ApiResponse(responseCode = "204", description = "No Content")
+    @ApiResponse(responseCode = "404", description = "categories not found.", content = @Content(schema = @Schema(implementation = ErrorDetails.class)))
+    @GetMapping(params ={"size"})
+    public ResponseEntity<List<CategoryDTO>> getTopThreeCategories(@Parameter(description = "Category size.", example = "3") @RequestParam(name = "size") Long size) {
+        List<CategoryDTO> allCategory = categoryService.findTheTopCategories(size);
         return ResponseEntity.status(HttpStatus.OK).body(allCategory);
     }
 

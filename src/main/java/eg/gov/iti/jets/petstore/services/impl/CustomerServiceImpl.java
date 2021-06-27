@@ -2,15 +2,19 @@ package eg.gov.iti.jets.petstore.services.impl;
 
 
 import eg.gov.iti.jets.petstore.dto.CustomerDTO;
+import eg.gov.iti.jets.petstore.dto.CustomersDTO;
 import eg.gov.iti.jets.petstore.dto.OrderDTO;
 import eg.gov.iti.jets.petstore.dto.UserRegistrationDTO;
 import eg.gov.iti.jets.petstore.entities.Customer;
+
 import eg.gov.iti.jets.petstore.entities.Seller;
+
 import eg.gov.iti.jets.petstore.exceptions.ResourceNotFoundException;
 import eg.gov.iti.jets.petstore.repositories.CustomerRepository;
 import eg.gov.iti.jets.petstore.services.CustomerService;
 import org.modelmapper.ModelMapper;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -32,12 +36,14 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public List<CustomerDTO> getAllCustomers(Integer page, Integer pageLimit) {
-        return customerRepository.findAll(Pageable.ofSize(pageLimit).withPage(page))
-                .stream()
-                .map(e -> modelMapper.map(e, CustomerDTO.class))
-                .collect(Collectors.toList());
-
+    public CustomersDTO getAllCustomers(Integer page, Integer pageLimit) {
+        Page<Customer> customers = customerRepository.findAll(Pageable.ofSize(pageLimit).withPage(page));
+        return CustomersDTO.builder()
+                .count(customers.getTotalElements())
+                .customers(customers
+                        .map(e -> modelMapper.map(e, CustomerDTO.class))
+                        .getContent())
+                .build();
     }
 
     @Override
@@ -75,10 +81,10 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public List<OrderDTO> getCustomerOrders(Long id) {
         return customerRepository.findById(id)
-                .orElseThrow(()->new ResourceNotFoundException("Customer with id: " + id + " not found."))
+                .orElseThrow(() -> new ResourceNotFoundException("Customer with id: " + id + " not found."))
                 .getOrders()
                 .stream()
-                .map(e->modelMapper.map(e, OrderDTO.class))
+                .map(e -> modelMapper.map(e, OrderDTO.class))
                 .collect(Collectors.toList());
     }
 

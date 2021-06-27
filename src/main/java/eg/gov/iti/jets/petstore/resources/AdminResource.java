@@ -1,7 +1,11 @@
 package eg.gov.iti.jets.petstore.resources;
 
 import eg.gov.iti.jets.petstore.dto.AdminDTO;
+
 import eg.gov.iti.jets.petstore.dto.UserRegistrationDTO;
+
+import eg.gov.iti.jets.petstore.dto.AdminsDTO;
+
 import eg.gov.iti.jets.petstore.exceptions.models.ErrorDetails;
 import eg.gov.iti.jets.petstore.services.AdminService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -14,10 +18,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequestMapping(path = "admins", produces = MediaType.APPLICATION_JSON_VALUE)
+@ApiResponse(responseCode = "500", description = "Internal server error.", content = @Content(schema = @Schema(implementation = ErrorDetails.class)))
 public class AdminResource {
     public final AdminService adminService;
 
@@ -30,10 +33,10 @@ public class AdminResource {
     @ApiResponse(responseCode = "204", description = "Empty list of admin accounts.", content = @Content)
     @ApiResponse(responseCode = "200", description = "Successfully retrieve admin accounts.")
     @GetMapping
-    public ResponseEntity<List<AdminDTO>> getAdmins(@Parameter(description = "Number of pages to retrieve.", example = "0") @RequestParam(name = "page", defaultValue = "0") Integer page,
-                                                    @Parameter(description = "Number of accounts in the page.", example = "10") @RequestParam(name = "pageLimit", defaultValue = "10") Integer pageLimit) {
-        List<AdminDTO> admins = adminService.getAllAdmins(page, pageLimit);
-        HttpStatus httpStatus = admins.isEmpty() ? HttpStatus.NO_CONTENT : HttpStatus.OK;
+    public ResponseEntity<AdminsDTO> getAdmins(@Parameter(description = "Number of pages to retrieve.", example = "0") @RequestParam(name = "page", defaultValue = "0") Integer page,
+                                               @Parameter(description = "Number of accounts in the page.", example = "10") @RequestParam(name = "pageLimit", defaultValue = "10") Integer pageLimit) {
+        AdminsDTO admins = adminService.getAllAdmins(page, pageLimit);
+        HttpStatus httpStatus = admins.getCount() <= 0 ? HttpStatus.NO_CONTENT : HttpStatus.OK;
         return ResponseEntity.status(httpStatus).body(admins);
     }
 

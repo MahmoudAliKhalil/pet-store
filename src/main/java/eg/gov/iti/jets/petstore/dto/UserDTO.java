@@ -15,10 +15,12 @@ import java.time.LocalDate;
 public class UserDTO {
     @Schema(description = "User's unique identifier", example = "1")
     private Long id;
+    @Schema(description = "User first Name", example = "foo")
+    private String firstName;
+    @Schema(description = "User last Name", example = "foo")
+    private String lastName;
     @Schema(description = "User's email address", example = "foo@example.com")
     private String email;
-    @Schema(description = "User's account hashed password", example = "!@ABc12345_#0")
-    private String password;
     @Schema(description = "User's phone number", example = "01000100100")
     private String phoneNumber;
     @Schema(description = "User's address")

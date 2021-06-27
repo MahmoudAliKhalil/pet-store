@@ -38,26 +38,15 @@ public class SpeciesServiceImpl implements SpeciesService {
 
     @Override
     public SpeciesDTO getSpeciesByName(String speciesName) {
-        Optional<Species> speciesOptional = speciesRepository.findSpeciesByName(speciesName);
-        if (speciesOptional.isPresent()) {
-            Species species = speciesOptional.get();
-            return modelMapper.map(species, SpeciesDTO.class);
-        } else {
-            throw new ResourceNotFoundException("Species " + speciesName + " is not found");
-        }
-
+        return modelMapper.map(speciesRepository.findSpeciesByName(speciesName)
+                .orElseThrow(() -> new ResourceNotFoundException("Species " + speciesName + " is not found")),
+                SpeciesDTO.class);
     }
 
     @Override
-    public SpeciesDTO getSpeciesById(Integer speciesId){
-        Optional<Species> speciesOptional = speciesRepository.findById(speciesId);
-        if (speciesOptional.isPresent()) {
-            Species species = speciesOptional.get();
-            SpeciesDTO speciesDTO = modelMapper.map(species, SpeciesDTO.class);
-            return speciesDTO;
-        } else {
-            throw new ResourceNotFoundException("Species no. " + speciesId + " is not found");
-        }
+    public SpeciesDTO getSpeciesById(Integer speciesId) {
+        return modelMapper.map(speciesRepository.findById(speciesId)
+                .orElseThrow(() -> new ResourceNotFoundException("Species no. " + speciesId + " is not found")), SpeciesDTO.class);
     }
 
     @Override
@@ -69,11 +58,14 @@ public class SpeciesServiceImpl implements SpeciesService {
 
     @Override
     public SpeciesDTO updateSpecies(Integer id, SpeciesDTO speciesDTO) {
-        speciesDTO.setSpeciesId(id);
-        Species species = modelMapper.map(speciesDTO, Species.class);
-        Species speciesAfterUpdate = speciesRepository.save(species);
-        SpeciesDTO newSpeciesDTO = modelMapper.map(speciesAfterUpdate, SpeciesDTO.class);
-        return newSpeciesDTO;
+        if (speciesRepository.existsById(id)) {
+            speciesDTO.setSpeciesId(id);
+            Species species = modelMapper.map(speciesDTO, Species.class);
+            Species speciesAfterUpdate = speciesRepository.save(species);
+            return modelMapper.map(speciesAfterUpdate, SpeciesDTO.class);
+        } else {
+            throw new ResourceNotFoundException("Species with id: " + id + " is not found");
+        }
     }
 
     @Override

@@ -22,6 +22,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/species")
 @Tag(name = "Species", description = "Provide operations to deal with species.")
+@ApiResponse(responseCode = "500", description = "Internal server error.", content = @Content(schema = @Schema(implementation = ErrorDetails.class)))
 public class SpeciesResource {
     private final SpeciesService speciesService;
 

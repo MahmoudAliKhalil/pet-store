@@ -15,6 +15,8 @@ public class ProductImageDTO {
 
     @Schema(description = "Product Image Id")
     private Long id;
-    @Schema(description = "Product Image Name")
+    @Schema(description = "Product Image name")
+    private String name;
+    @Schema(description = "Product Image url")
     private String url;
 }

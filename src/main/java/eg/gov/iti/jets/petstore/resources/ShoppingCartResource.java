@@ -18,6 +18,7 @@ import java.util.Set;
 
 @RestController
 @RequestMapping("/customers/{id}/shoppingCart/")
+@ApiResponse(responseCode = "500", description = "Internal server error.", content = @Content(schema = @Schema(implementation = ErrorDetails.class)))
 public class ShoppingCartResource {
 
     private final ShoppingCartService shoppingCartService;
