@@ -7,7 +7,7 @@ spring:
   application:
     name: 'pet-store'
   datasource:
-    url: 'jdbc:mysql://localhost:3306'
+    url: '${db-url}'
     username: '${db-username}'
     password: '${db-password}'
     hikari:
@@ -18,8 +18,8 @@ spring:
   mail:
     host: smtp.gmail.com
     port: 465
-    username: ebrahim.elmohamed26@gmail.com
-    password: blkcfcvdvuzrbbjn
+    username: '${email-username}'
+    password: '${email-password}'
     protocol: smtp
     properties:
       mail:
@@ -51,9 +51,9 @@ springdoc:
 
 #google id for login with social media
 google:
-   id: 150394644628-b6rfj7tbi4pv0cguooulnsomi7a4p1qv.apps.googleusercontent.com
+   id: '${google-id}'
 secret:
-   password: 12345
+   password: '${google-password}'
 
 management:
   endpoints:
@@ -69,8 +69,8 @@ management:
 cloud:
   aws:
     credentials:
-      access-key: AKIAXEW3M2J5FLR7EO4T
-      secret-key: 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
+      access-key: '${aws-access-key}'
+      secret-key: '${aws-secret-key}'
     region:
       static: us-east-2
       auto: false
