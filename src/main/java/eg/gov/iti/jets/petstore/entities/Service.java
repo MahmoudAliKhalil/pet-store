@@ -17,6 +17,7 @@ public class Service {
     private Long id;
     private String name;
     private Float price;
+    @Lob
     private String description;
     private Float discount;
     private LocalTime startTime;

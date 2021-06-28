@@ -15,7 +15,7 @@ public class Rate {
     private RateId id;
     @ManyToOne(optional = false)
     @MapsId("userId")
-    private User user;
+    private Customer user;
     @ManyToOne(optional = false)
     @MapsId("productId")
     private Product product;
