@@ -29,13 +29,6 @@ public class AwsConfiguration {
     
     @Bean
     public AmazonS3 s3() {
-
-        logger.info("AWS cofiguration: ");
-        logger.info("Access-Key: {}", awsAccessKey);
-        logger.info("Secret-Key: {}", awsSecretKey);
-        logger.info("Region: {}", region);
-
-
         AWSCredentials awsCredentials =
                 new BasicAWSCredentials(awsAccessKey,  awsSecretKey);
         return AmazonS3ClientBuilder
