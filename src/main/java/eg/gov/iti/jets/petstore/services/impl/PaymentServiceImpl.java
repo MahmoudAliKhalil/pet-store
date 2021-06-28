@@ -11,6 +11,7 @@ import eg.gov.iti.jets.petstore.repositories.CustomerRepository;
 import eg.gov.iti.jets.petstore.repositories.ProductRepository;
 import eg.gov.iti.jets.petstore.services.PaymentService;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -24,11 +25,15 @@ public class PaymentServiceImpl implements PaymentService {
     private final ModelMapper modelMapper;
     private final ProductRepository productRepository;
     private final CustomerRepository customerRepository;
+    private final String domain;
+    private final String apiKey;
 
-    public PaymentServiceImpl(ModelMapper modelMapper, ProductRepository productRepository, CustomerRepository customerRepository) {
+    public PaymentServiceImpl(ModelMapper modelMapper, ProductRepository productRepository, CustomerRepository customerRepository, @Value("payment.domain") String domain, @Value("payment.api.key") String apiKey) {
         this.modelMapper = modelMapper;
         this.productRepository = productRepository;
         this.customerRepository = customerRepository;
+        this.domain = domain;
+        this.apiKey = apiKey;
     }
 
     @Override
@@ -37,9 +42,7 @@ public class PaymentServiceImpl implements PaymentService {
         Customer customer = customerRepository.getById(userId);
         Set<CartItem> shoppingCart = customer.getShoppingCart();
 
-        Stripe.apiKey = "sk_test_51J61qnG9Zk5ebGQ9q5NhPpxBrjn6Yn3UmM8yElGYEkPRXCVffFPCNQJivmWbdNujA9q1t39B6tWdhaSFK7HsrSPH00ajeVFpoE";
-
-        final String YOUR_DOMAIN ="http://localhost:4200";
+        Stripe.apiKey = apiKey;
 
         List<SessionCreateParams.LineItem> lineItems = shoppingCart.stream().map(
                 item-> SessionCreateParams.LineItem.builder()
@@ -68,8 +71,8 @@ public class PaymentServiceImpl implements PaymentService {
 //                                        .build())
                         .addPaymentMethodType(SessionCreateParams.PaymentMethodType.CARD)
                         .setMode(SessionCreateParams.Mode.PAYMENT)
-                        .setSuccessUrl(YOUR_DOMAIN + "/success")
-                        .setCancelUrl(YOUR_DOMAIN + "/failed").addAllLineItem(lineItems).build();
+                        .setSuccessUrl(domain + "/success")
+                        .setCancelUrl(domain + "/failed").addAllLineItem(lineItems).build();
 
         Session session = Session.create(params);
         HashMap<String, String> responseData = new HashMap<String, String>();

@@ -170,7 +170,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductsDTO searchProducts(String query, Integer page, Integer pageLimit) {
-        Page<Product> products = productRepository.findProductsByNameContainsAndAvailableAndQuantityGreaterThan(query, true, 0, Pageable.ofSize(pageLimit).withPage(page));
+        Page<Product> products = productRepository.findProductsByNameIgnoreCaseContainsAndAvailableAndQuantityGreaterThan(query, true, 0, Pageable.ofSize(pageLimit).withPage(page));
         return ProductsDTO.builder()
                 .count(products.getTotalElements())
                 .products(products

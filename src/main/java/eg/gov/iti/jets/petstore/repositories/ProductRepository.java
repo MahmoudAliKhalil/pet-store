@@ -35,6 +35,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     @Query("select p from Product p inner join OrderItems o on o.product.id = p.id where o.product.quantity > 0 and o.product.available <> false group by o.product.id order by count(o.product.id) desc, sum(o.quantity) desc")
     Page<Product> getTheBestSellersProducts(Pageable pageable);
 
-    Page<Product> findProductsByNameContainsAndAvailableAndQuantityGreaterThan(String name, Boolean isAvailable, Integer quantity, Pageable pageable);
+    Page<Product> findProductsByNameIgnoreCaseContainsAndAvailableAndQuantityGreaterThan(String name, Boolean isAvailable, Integer quantity, Pageable pageable);
 
 }

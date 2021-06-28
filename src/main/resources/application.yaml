@@ -65,6 +65,14 @@ management:
       enabled: true
     health:
       show-details: always
+  server:
+    port: '${pet-store-application-ssl-port}'
+    ssl:
+      enabled: true
+      key-store: '${ssl-key-location}'
+      key-store-type: PKCS12
+      key-alias: '${ssl-key-alias}'
+      key-store-password: '${ssl-key-password}'
 
 cloud:
   aws:
@@ -75,4 +83,9 @@ cloud:
       static: us-east-2
       auto: false
     s3:
-      bucket-name: petstore-aws-storage
+      bucket-name: '${aws-bucket-name}'
+
+payment:
+  domain: 'http://ng-pet-store-frontend.s3-website.eu-west-3.amazonaws.com'
+  api:
+    key: '${payment-api-key}'
