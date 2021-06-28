@@ -28,7 +28,7 @@ public class PaymentServiceImpl implements PaymentService {
     private final String domain;
     private final String apiKey;
 
-    public PaymentServiceImpl(ModelMapper modelMapper, ProductRepository productRepository, CustomerRepository customerRepository, @Value("payment.domain") String domain, @Value("payment.api.key") String apiKey) {
+    public PaymentServiceImpl(ModelMapper modelMapper, ProductRepository productRepository, CustomerRepository customerRepository, @Value("${payment.domain}") String domain, @Value("${payment.api.key}") String apiKey) {
         this.modelMapper = modelMapper;
         this.productRepository = productRepository;
         this.customerRepository = customerRepository;
