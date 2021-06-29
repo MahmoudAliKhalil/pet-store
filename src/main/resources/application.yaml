@@ -12,7 +12,7 @@ spring:
     password: '${db-password}'
     hikari:
       minimum-idle: 2
-      maximum-pool-size: 11
+      maximum-pool-size: 100
       catalog: petstoreschema
       register-mbeans: true
   mail:
@@ -32,7 +32,7 @@ spring:
 
 
   jpa:
-    show-sql: true
+#    show-sql: true
     hibernate:
       ddl-auto: update
     database: MYSQL
